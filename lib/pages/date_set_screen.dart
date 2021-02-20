@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lunarcalgoog/objects_widgets/action_passer.dart';
 import 'package:lunarcalgoog/objects_widgets/event_info.dart';
 
 class DateSetScreen extends StatefulWidget {
@@ -11,16 +12,28 @@ class DateSetScreen extends StatefulWidget {
 }
 
 class _DateSetScreenState extends State<DateSetScreen> {
+  final titleController = TextEditingController();
+  final repeatController = TextEditingController();
+  DateTime dateController;
   bool showDelete = true;
 
   @override
+  void dispose() {
+    titleController.dispose();
+    repeatController.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
-    // TODO: implement initState
     if(widget.event == null) {
-      widget.event = new EventInfo(title: '', dateTime: DateTime.now(), repeatFor: 0);
+      widget.event = EventInfo(eventID: DateTime.now().toString(), title: '', dateTime: DateTime.now(), repeatFor: 0);
       showDelete = false;
     }
-
+    // TODO: implement initState
+    titleController.text = widget.event.title;
+    dateController = widget.event.dateTime;
+    repeatController.text = widget.event.repeatFor.toString();
     super.initState();
   }
 
@@ -40,7 +53,7 @@ class _DateSetScreenState extends State<DateSetScreen> {
             children: <Widget>[
               // Title
               TextField(
-                controller: TextEditingController()..text = widget.event.title,
+                controller: titleController,
                 cursorColor: Color.fromARGB(255, 236, 239, 244),
                 style: TextStyle(
                   color: Color.fromARGB(255, 236, 239, 244),
@@ -96,7 +109,7 @@ class _DateSetScreenState extends State<DateSetScreen> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  '${widget.event.dateTime.toLocal()}'.split(' ')[0], //split string into a list then display the first one
+                                  '${dateController.toLocal()}'.split(' ')[0], //split string into a list then display the first one
                                   style: TextStyle(
                                     fontFamily: 'Product Sans',
                                     fontSize: 50,
@@ -140,7 +153,7 @@ class _DateSetScreenState extends State<DateSetScreen> {
                   Expanded(
                     flex: 5,
                     child: TextField(
-                        controller: TextEditingController()..text = widget.event.repeatFor.toString(),
+                        controller: repeatController,
                         cursorColor: Color.fromARGB(255, 236, 239, 244),
                         textAlign: TextAlign.end,
                         style: TextStyle(
@@ -208,9 +221,9 @@ class _DateSetScreenState extends State<DateSetScreen> {
       }
     );
 
-    if (datePicked != null && datePicked != widget.event.dateTime)
+    if (datePicked != null && datePicked != dateController)
       setState(() {
-        widget.event.dateTime = datePicked;
+        dateController = datePicked;
       });
   }
 
@@ -243,7 +256,10 @@ class _DateSetScreenState extends State<DateSetScreen> {
             borderRadius: BorderRadius.all(Radius.circular(8)),
           )
       ),
-      onPressed: () {},
+      onPressed: () {
+        Navigator.pop(context, ActionPasser(action: 'Delete'));
+      },
+
       child: Padding(
         padding: const EdgeInsets.fromLTRB(3, 5, 3, 5),
         child: Row(
@@ -265,6 +281,7 @@ class _DateSetScreenState extends State<DateSetScreen> {
         ),
       )
   );
+
   Widget saveButton() => TextButton(
       style: TextButton.styleFrom(
           backgroundColor: Color.fromARGB(255, 128, 161, 192),
@@ -272,7 +289,19 @@ class _DateSetScreenState extends State<DateSetScreen> {
             borderRadius: BorderRadius.all(Radius.circular(8)),
           )
       ),
-      onPressed: () {},
+      onPressed: () {
+        Navigator.pop(
+            context,
+            ActionPasser(
+                action: 'Save',
+                eventInfo: EventInfo(
+                  eventID: widget.event.eventID,
+                  title: titleController.text,
+                  dateTime: dateController,
+                  repeatFor: int.parse(repeatController.text),
+                )
+            ));
+      },
       child: Padding(
         padding: const EdgeInsets.fromLTRB(6, 5, 6, 5),
         child: Row(

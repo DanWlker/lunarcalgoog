@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:lunarcalgoog/objects_widgets/action_passer.dart';
 import 'package:lunarcalgoog/pages/date_set_screen.dart';
 import 'event_info.dart';
 
 class AppCardOne extends StatefulWidget {
   EventInfo event;
   int cardId;
+  Function delete;
+  Function save;
 
-  AppCardOne({this.event, this.cardId});
+  AppCardOne({this.event, this.cardId, this.delete, this.save});
 
   @override
   _AppCardOneState createState() => _AppCardOneState();
@@ -27,12 +30,7 @@ class _AppCardOneState extends State<AppCardOne> {
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DateSetScreen(event: widget.event)
-                      ),
-                  );
+                  _returnFromEventEditPage(context);
                 },
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
@@ -87,5 +85,23 @@ class _AppCardOneState extends State<AppCardOne> {
         SizedBox(height:20),
       ],
     );
+  }
+
+  _returnFromEventEditPage(BuildContext context) async {
+    final ActionPasser result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DateSetScreen(event: widget.event),
+      ),
+    );
+
+    if(result.action == 'Save') {
+      widget.event = result.eventInfo;
+      widget.save(widget.event);
+    }
+    else if(result.action == 'Delete') {
+      widget.delete();
+    }
+    else {}
   }
 }
