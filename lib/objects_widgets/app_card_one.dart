@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lunarcalgoog/objects_widgets/action_passer.dart';
+import 'package:lunarcalgoog/objects_widgets/lun_sol_converter.dart';
 import 'package:lunarcalgoog/pages/date_set_screen.dart';
 import 'event_info.dart';
 
@@ -43,7 +44,7 @@ class _AppCardOneState extends State<AppCardOne> {
                       cardColor[widget.cardId%2][3]),
                   ),
                 child: Container(
-                  padding: EdgeInsets.fromLTRB(8, 20, 8, 20),
+                  padding: EdgeInsets.fromLTRB(4, 20, 4, 20),
                   child: Row(
                       children: <Widget>[
                         Expanded(
@@ -52,22 +53,22 @@ class _AppCardOneState extends State<AppCardOne> {
                             widget.event.title,
                             style: TextStyle(
                               fontFamily: 'ProductSans',
-                              fontSize: 20.0,
+                              fontSize: 17.0,
                               letterSpacing: 0.9,
                               color: Color.fromARGB(255, 59, 66, 82),
                             ),
                           ),
                         ),
                         Expanded(
-                            flex:1,
+                            flex:2,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Text(
-                                  '阴历${widget.event.dateTime.month.toString()}月${widget.event.dateTime.day.toString()}日',
+                                  LunSolConverter.solTolun(widget.event.dateTime).toString(),
                                   style: TextStyle(
                                     fontFamily: 'ProductSans',
-                                    fontSize: 20.0,
+                                    fontSize: 17.0,
                                     letterSpacing: 0.9,
                                     color: Color.fromARGB(255, 59, 66, 82),
                                   ),
