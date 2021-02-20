@@ -1,29 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:lunarcalgoog/objects_widgets/save_and_read.dart';
 import 'package:lunarcalgoog/pages/date_set_screen.dart';
 import '../objects_widgets/event_info.dart';
 import '../objects_widgets/app_card_one.dart';
 
 class Home extends StatefulWidget {
+  List<EventInfo> events;
+  Home({this.events});
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-
-  DateTime time = DateTime.now();
-
-  List<EventInfo> events;
   int counter;
 
   @override
   void initState() {
-    events = [
-      EventInfo(eventID: '0', title: 'Wang Yi Lin', dateTime: DateTime.now(), repeatFor: 5),
-      EventInfo(eventID: '1', title: 'Zheng Zong Qi', dateTime: new DateTime(1990, 3, 4), repeatFor: 3),
-      EventInfo(eventID: '2', title: 'Bookman', dateTime: new DateTime(2000, 2, 2), repeatFor: 4),
-    ];
     // TODO: implement initState
     super.initState();
+
+
   }
 
   @override //build will override the base class build function
@@ -47,21 +43,23 @@ class _HomeState extends State<Home> {
         padding: EdgeInsets.fromLTRB(20, 35, 20, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: events.map((event) {
+          children: widget.events.map((event) {
             counter = counter + 1;
             return AppCardOne(
                 event: event,
                 cardId: counter,
                 delete: () {
                   setState(() {
-                    events.remove(event);
+                    widget.events.remove(event);
+                    writeDataToStorage();
                   });
                 },
                 save: (EventInfo eventFromChild) {
                   setState(() {
-                    for(int i = 0; i < events.length; ++i) {
-                      if(events[i].eventID == eventFromChild.eventID) {
-                        events[i] = eventFromChild;
+                    for(int i = 0; i < widget.events.length; ++i) {
+                      if(widget.events[i].eventID == eventFromChild.eventID) {
+                        widget.events[i] = eventFromChild;
+                        writeDataToStorage();
                         break;
                       }
                     }
@@ -85,7 +83,8 @@ class _HomeState extends State<Home> {
     );
   }
 
-  _returnFromEventCreatePage(BuildContext context) async {
+
+  void _returnFromEventCreatePage(BuildContext context) async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -95,8 +94,15 @@ class _HomeState extends State<Home> {
 
     setState(() {
       if(result.action == 'Save')
-        events.add(result.eventInfo);
+        {
+          widget.events.add(result.eventInfo);
+          writeDataToStorage();
+        }
     });
+  }
 
+  void writeDataToStorage() async {
+    SaveAndRead storage = SaveAndRead();
+    storage.writeData(EventInfo.encode(widget.events).toString());
   }
 }
