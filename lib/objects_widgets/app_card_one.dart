@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
-import 'user_info.dart';
+import 'package:lunarcalgoog/pages/date_set_screen.dart';
+import 'event_info.dart';
 
-class AppCardOne extends StatelessWidget {
-
-  UserInfo user;
+class AppCardOne extends StatefulWidget {
+  EventInfo event;
   int cardId;
 
-  AppCardOne({this.user, this.cardId});
+  AppCardOne({this.event, this.cardId});
 
+  @override
+  _AppCardOneState createState() => _AppCardOneState();
+}
+
+class _AppCardOneState extends State<AppCardOne> {
   List< List<int> > cardColor = [
     [255, 229, 233, 240],
     [255, 216, 222, 233]
@@ -22,17 +27,22 @@ class AppCardOne extends StatelessWidget {
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/date_set_screen');
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => DateSetScreen(event: widget.event)
+                      ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(9)),
                   ),
                   primary: Color.fromARGB(
-                      cardColor[cardId%2][0],
-                      cardColor[cardId%2][1],
-                      cardColor[cardId%2][2],
-                      cardColor[cardId%2][3]),
+                      cardColor[widget.cardId%2][0],
+                      cardColor[widget.cardId%2][1],
+                      cardColor[widget.cardId%2][2],
+                      cardColor[widget.cardId%2][3]),
                   ),
                 child: Container(
                   padding: EdgeInsets.fromLTRB(8, 20, 8, 20),
@@ -41,7 +51,7 @@ class AppCardOne extends StatelessWidget {
                         Expanded(
                           flex:1,
                           child: Text(
-                            user.name,
+                            widget.event.title,
                             style: TextStyle(
                               fontFamily: 'ProductSans',
                               fontSize: 20.0,
@@ -56,7 +66,7 @@ class AppCardOne extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Text(
-                                  '阴历${user.month}月${user.date}日',
+                                  '阴历${widget.event.dateTime.month.toString()}月${widget.event.dateTime.day.toString()}日',
                                   style: TextStyle(
                                     fontFamily: 'ProductSans',
                                     fontSize: 20.0,

@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:lunarcalgoog/objects_widgets/event_info.dart';
 
 class DateSetScreen extends StatefulWidget {
+  EventInfo event;
+
+  DateSetScreen({this.event});
+
   @override
   _DateSetScreenState createState() => _DateSetScreenState();
 }
 
 class _DateSetScreenState extends State<DateSetScreen> {
-  DateTime selectedDate;
+  bool showDelete = true;
 
   @override
   void initState() {
     // TODO: implement initState
+    if(widget.event == null) {
+      widget.event = new EventInfo(title: '', dateTime: DateTime.now(), repeatFor: 0);
+      showDelete = false;
+    }
+
     super.initState();
-    selectedDate = DateTime.now();
   }
 
   @override
@@ -31,6 +40,7 @@ class _DateSetScreenState extends State<DateSetScreen> {
             children: <Widget>[
               // Title
               TextField(
+                controller: TextEditingController()..text = widget.event.title,
                 cursorColor: Color.fromARGB(255, 236, 239, 244),
                 style: TextStyle(
                   color: Color.fromARGB(255, 236, 239, 244),
@@ -86,7 +96,7 @@ class _DateSetScreenState extends State<DateSetScreen> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  '${selectedDate.toLocal()}'.split(' ')[0], //split string into a list then display the first one
+                                  '${widget.event.dateTime.toLocal()}'.split(' ')[0], //split string into a list then display the first one
                                   style: TextStyle(
                                     fontFamily: 'Product Sans',
                                     fontSize: 50,
@@ -130,6 +140,7 @@ class _DateSetScreenState extends State<DateSetScreen> {
                   Expanded(
                     flex: 5,
                     child: TextField(
+                        controller: TextEditingController()..text = widget.event.repeatFor.toString(),
                         cursorColor: Color.fromARGB(255, 236, 239, 244),
                         textAlign: TextAlign.end,
                         style: TextStyle(
@@ -174,71 +185,7 @@ class _DateSetScreenState extends State<DateSetScreen> {
               ),
               SizedBox(height: 75),
               //save and delete
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  //delete
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 128, 161, 192),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                      )
-                    ),
-                    onPressed: () {},
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(3, 5, 3, 5),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.delete,
-                            color: Color.fromARGB(255, 229, 233, 240),
-                          ),
-                          Text(
-                            'Delete',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontFamily: 'ProductSans',
-                              letterSpacing: 0.9,
-                              color: Color.fromARGB(255, 229, 233, 240),
-                            )
-                          ),
-                        ],
-                      ),
-                    )
-                  ),
-                  //save
-                  TextButton(
-                      style: TextButton.styleFrom(
-                          backgroundColor: Color.fromARGB(255, 128, 161, 192),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                          )
-                      ),
-                      onPressed: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(6, 5, 6, 5),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.save,
-                              color: Color.fromARGB(255, 229, 233, 240),
-                            ),
-                            Text(
-                                'Save',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontFamily: 'ProductSans',
-                                  letterSpacing: 0.9,
-                                  color: Color.fromARGB(255, 229, 233, 240),
-                                )
-                            ),
-                          ],
-                        ),
-                      )
-                  )
-                ],
-              )
+              drawButtons(),
             ],
           ),
         ),
@@ -247,10 +194,10 @@ class _DateSetScreenState extends State<DateSetScreen> {
   }
 
   //date picker
-  pickDate(BuildContext context) async {
+  void pickDate(BuildContext context) async {
     DateTime datePicked = await showDatePicker(
       context: context,
-      initialDate: selectedDate,
+      initialDate: widget.event.dateTime,
       firstDate: DateTime(1900),
       lastDate: DateTime(2300),
       builder: (context, child) {
@@ -261,9 +208,90 @@ class _DateSetScreenState extends State<DateSetScreen> {
       }
     );
 
-    if (datePicked != null && datePicked != selectedDate)
+    if (datePicked != null && datePicked != widget.event.dateTime)
       setState(() {
-        selectedDate = datePicked;
+        widget.event.dateTime = datePicked;
       });
   }
+
+  //show delete or not
+  Widget drawButtons() {
+    if(showDelete)
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          //delete
+          deleteButton(),
+          //save
+          saveButton(),
+        ],
+      );
+    else
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          //save
+          saveButton(),
+        ],
+      );;
+  }
+
+  Widget deleteButton() => TextButton(
+      style: TextButton.styleFrom(
+          backgroundColor: Color.fromARGB(255, 128, 161, 192),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          )
+      ),
+      onPressed: () {},
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(3, 5, 3, 5),
+        child: Row(
+          children: [
+            Icon(
+              Icons.delete,
+              color: Color.fromARGB(255, 229, 233, 240),
+            ),
+            Text(
+                'Delete',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontFamily: 'ProductSans',
+                  letterSpacing: 0.9,
+                  color: Color.fromARGB(255, 229, 233, 240),
+                )
+            ),
+          ],
+        ),
+      )
+  );
+  Widget saveButton() => TextButton(
+      style: TextButton.styleFrom(
+          backgroundColor: Color.fromARGB(255, 128, 161, 192),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          )
+      ),
+      onPressed: () {},
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(6, 5, 6, 5),
+        child: Row(
+          children: [
+            Icon(
+              Icons.save,
+              color: Color.fromARGB(255, 229, 233, 240),
+            ),
+            Text(
+                'Save',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontFamily: 'ProductSans',
+                  letterSpacing: 0.9,
+                  color: Color.fromARGB(255, 229, 233, 240),
+                )
+            ),
+          ],
+        ),
+      )
+  );
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../objects_widgets/user_info.dart';
+import 'package:lunarcalgoog/pages/date_set_screen.dart';
+import '../objects_widgets/event_info.dart';
 import '../objects_widgets/app_card_one.dart';
 
 class Home extends StatefulWidget {
@@ -8,18 +9,20 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<UserInfo> users = [
-    UserInfo(name: 'Wang Yi Lin', date: '12', month: '12', year: '1999'),
-    UserInfo(name: 'Zheng Zong Qi', date: '07', month: '15', year: '2000'),
-    UserInfo(name: 'Bookman', date: '01', month: '01', year: '2001'),
-  ];
 
+  DateTime time = DateTime.now();
 
-
+  List<EventInfo> events;
   int counter;
 
   @override //build will override the base class build function
   Widget build(BuildContext context) {
+    events = [
+      EventInfo(eventID: '0', title: 'Wang Yi Lin', dateTime: DateTime.now(), repeatFor: 5),
+      EventInfo(eventID: '1', title: 'Zheng Zong Qi', dateTime: new DateTime(1990, 3, 4), repeatFor: 3),
+      EventInfo(eventID: '2', title: 'Bookman', dateTime: new DateTime(2000, 2, 2), repeatFor: 4),
+    ];
+
     counter = 0;
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 46, 52, 64),
@@ -38,16 +41,21 @@ class _HomeState extends State<Home> {
         padding: EdgeInsets.fromLTRB(20, 35, 20, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: users.map((user) {
+          children: events.map((event) {
             counter = counter + 1;
-            return AppCardOne(user: user, cardId: counter);
+            return AppCardOne(event: event, cardId: counter);
           }).toList(),
         ),
       ),
 
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/date_set_screen');
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DateSetScreen(),
+                )
+            );
           },
           backgroundColor:Color.fromARGB(255, 229, 233, 240),
           child: Icon(
