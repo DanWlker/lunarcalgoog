@@ -1,13 +1,18 @@
 import 'dart:io';
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:googleapis/calendar/v3.dart';
+import 'package:lunar_calendar_converter/lunar_solar_converter.dart';
+import 'package:lunarcalgoog/objects_widgets/event_info.dart';
+import 'package:lunarcalgoog/objects_widgets/lun_sol_converter.dart';
+import 'package:retry/retry.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SaveToGoogle {
   static const _scopes = const[CalendarApi.calendarScope];
-  var _credentials;
+  static var _credentials;
+  static bool assigned = false;
 
-  void assignClientID() {
+  static void assignClientID() {
     if (Platform.isAndroid) {
       _credentials = new ClientId(
         "690477293202-jdq06bjdc537t7pc57qchptcejlm6g8s.apps.googleusercontent.com",
@@ -19,44 +24,120 @@ class SaveToGoogle {
     }
   }
 
-  void insert(String title, DateTime startTime, DateTime endTime) {
-    assignClientID();
-    var _clientID = _credentials;
-    clientViaUserConsent(_credentials, _scopes, prompt).then((AuthClient client) {
-      var calendar = CalendarApi(client);
-      calendar.calendarList.list().then((value) => print("VAL: $value"));
+  static void insertEvent(EventInfo eventInfo) async {
+    if(!assigned) {
+      assignClientID();
+      assigned = true;
+    }
 
-      String calendarId = "primary";
+    List<Event> eventsToSend = [];
+
+    for(int i = 0; i < eventInfo.repeatFor; ++i) {
+      Lunar lunCurrEventDate = LunSolConverter.solTolun(eventInfo.dateTime);
+      lunCurrEventDate.lunarYear = eventInfo.yearModified.toInt() + i;
+      lunCurrEventDate.isLeap = LunSolConverter.isLeapYear(lunCurrEventDate.lunarYear);
+      DateTime currEventDate = LunSolConverter.lunToSol(lunCurrEventDate);
+
       Event event = Event();
-
-      event.summary = title;
+      event.summary = eventInfo.title;
 
       EventDateTime start = new EventDateTime();
-      start.dateTime = startTime;
       start.timeZone = "GMT+8:00";
+      start.date = currEventDate;
       event.start = start;
 
       EventDateTime end = new EventDateTime();
       end.timeZone = "GMT+8:00";
-      end.dateTime = endTime;
+      end.date = currEventDate;
       event.end = end;
-      try {
-        calendar.events.insert(event, calendarId).then((value) {
-          print("ADDED: ${value.status}");
-          if(value.status == "confirmed") {
-            print('Event added in google calendar');
-          } else {
-            print("Unable to add event in google calendar");
-          }
-        });
-      } catch(e) {
-        print("Error creating event $e");
-      }
 
+      event.id = '${eventInfo.eventID}$i';
+
+      eventsToSend.add(event);
+    }
+
+    for(int i = 0; i < eventsToSend.length; ++i) {
+      print('${eventsToSend[i].id}, ${eventsToSend[i].start.date.toString()}, ${eventsToSend[i].end.date.toString()}');
+    }
+
+    clientViaUserConsent(_credentials, _scopes, prompt).then((AuthClient client) async {
+      var calendar = CalendarApi(client);
+      String calendarId = "primary";
+
+      int i = 0;
+      while (i < eventsToSend.length) {
+        final r = RetryOptions(maxAttempts: 8);
+        final response = await r.retry(
+              () => calendar.events.insert(eventsToSend[i], calendarId),
+              retryIf: (e) => e is Exception,
+        );
+        print("hi");
+        ++i;
+      }
     });
   }
-  
-  void prompt(String url) async {
+
+  static void deleteEvent(EventInfo eventInfo) async {
+    if(!assigned) {
+      assignClientID();
+      assigned = true;
+    }
+
+    List<Event> eventsToSend = [];
+
+    for(int i = 0; i < eventInfo.repeatFor; ++i) {
+      Lunar lunCurrEventDate = LunSolConverter.solTolun(eventInfo.dateTime);
+      lunCurrEventDate.lunarYear = eventInfo.yearModified+ i;
+      lunCurrEventDate.isLeap = LunSolConverter.isLeapYear(lunCurrEventDate.lunarYear);
+      DateTime currEventDate = LunSolConverter.lunToSol(lunCurrEventDate);
+
+      Event event = Event();
+      event.summary = eventInfo.title;
+
+      EventDateTime start = new EventDateTime();
+      start.timeZone = "GMT+8:00";
+      start.date = currEventDate;
+      event.start = start;
+
+      EventDateTime end = new EventDateTime();
+      end.timeZone = "GMT+8:00";
+      end.date = currEventDate;
+      event.end = end;
+
+      event.id = '${eventInfo.eventID}$i';
+
+      eventsToSend.add(event);
+    }
+
+    for(int i = 0; i < eventsToSend.length; ++i) {
+      print('${eventsToSend[i].id}, ${eventsToSend[i].start.date.toString()}, ${eventsToSend[i].end.date.toString()}');
+    }
+
+    clientViaUserConsent(_credentials, _scopes, prompt).then((AuthClient client) async {
+      var calendar = CalendarApi(client);
+      calendar.calendarList.list().then((value) => print("VAL: $value"));
+
+      String calendarId = "primary";
+
+      int i = 0;
+      while (i < eventsToSend.length) {
+        final r = RetryOptions(maxAttempts: 8);
+        final response = await r.retry(
+              () => calendar.events.delete(calendarId, eventsToSend[i].id),
+          retryIf: (e) => e is Exception,
+        );
+        print("hi");
+        ++i;
+      }
+    });
+  }
+
+  static void editEvent(EventInfo oldEvent, EventInfo newEvent) async {
+    deleteEvent(oldEvent);
+    insertEvent(newEvent);
+  }
+
+  static void prompt(String url) async {
     print("Please go to the following URL to grant access: ");
     print(" => $url");
     print("");
@@ -67,5 +148,4 @@ class SaveToGoogle {
       throw 'Could not launch $url';
     }
   }
-
 }

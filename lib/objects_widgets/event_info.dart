@@ -5,7 +5,8 @@ class EventInfo {
   String title;
   DateTime dateTime;
   int repeatFor;
-  EventInfo({this.eventID, this.title, this.dateTime, this.repeatFor});
+  int yearModified;
+  EventInfo({this.eventID, this.title, this.dateTime, this.repeatFor, this.yearModified});
 
   factory EventInfo.fromJson(Map<String, dynamic> jsonData) {
     return EventInfo(
@@ -13,6 +14,7 @@ class EventInfo {
       title: jsonData['title'],
       dateTime: DateTime.parse(jsonData['dateTime']),
       repeatFor: int.parse(jsonData['repeatFor']),
+      yearModified: int.parse(jsonData['yearModified']),
     );
   }
 
@@ -21,6 +23,7 @@ class EventInfo {
     'title': event.title,
     'dateTime': event.dateTime.toString(),
     'repeatFor': event.repeatFor.toString(),
+    'yearModified': event.yearModified.toString(),
   };
 
   static String encode(List<EventInfo> event) => json.encode(

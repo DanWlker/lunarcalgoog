@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lunarcalgoog/objects_widgets/action_passer.dart';
 import 'package:lunarcalgoog/objects_widgets/save_and_read.dart';
+import 'package:lunarcalgoog/objects_widgets/save_to_google.dart';
 import 'package:lunarcalgoog/pages/date_set_screen.dart';
 import '../objects_widgets/event_info.dart';
 import '../objects_widgets/app_card_one.dart';
@@ -50,19 +52,22 @@ class _HomeState extends State<Home> {
                 cardId: counter,
                 delete: () {
                   setState(() {
+                    SaveToGoogle.deleteEvent(event);
                     widget.events.remove(event);
-                    writeDataToStorage();
+                    SaveAndRead.writeData(EventInfo.encode(widget.events).toString());
                   });
                 },
                 save: (EventInfo eventFromChild) {
                   setState(() {
+                    eventFromChild.yearModified = DateTime.now().year.toInt();
                     for(int i = 0; i < widget.events.length; ++i) {
                       if(widget.events[i].eventID == eventFromChild.eventID) {
+                        SaveToGoogle.editEvent(widget.events[i], eventFromChild);
                         widget.events[i] = eventFromChild;
-                        writeDataToStorage();
                         break;
                       }
                     }
+                    SaveAndRead.writeData(EventInfo.encode(widget.events).toString());
                   });
                 }
             );
@@ -85,7 +90,7 @@ class _HomeState extends State<Home> {
 
 
   void _returnFromEventCreatePage(BuildContext context) async {
-    final result = await Navigator.push(
+    final ActionPasser result = await Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => DateSetScreen(),
@@ -95,14 +100,12 @@ class _HomeState extends State<Home> {
     setState(() {
       if(result.action == 'Save')
         {
+          result.eventInfo.yearModified = DateTime.now().year.toInt();
           widget.events.add(result.eventInfo);
-          writeDataToStorage();
+          SaveAndRead.writeData(EventInfo.encode(widget.events).toString());
+          SaveToGoogle.insertEvent(result.eventInfo);
         }
     });
   }
 
-  void writeDataToStorage() async {
-    SaveAndRead storage = SaveAndRead();
-    storage.writeData(EventInfo.encode(widget.events).toString());
-  }
 }

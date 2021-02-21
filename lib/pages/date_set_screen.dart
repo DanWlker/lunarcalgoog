@@ -27,7 +27,11 @@ class _DateSetScreenState extends State<DateSetScreen> {
   @override
   void initState() {
     if(widget.event == null) {
-      widget.event = EventInfo(eventID: DateTime.now().toString(), title: '', dateTime: DateTime.now(), repeatFor: 0);
+      widget.event = EventInfo(
+          eventID: '${DateTime.now().year}${DateTime.now().month}${DateTime.now().day}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().millisecond}${DateTime.now().microsecond}',
+          title: '',
+          dateTime: DateTime.now(),
+          repeatFor: 0);
       showDelete = false;
     }
     // TODO: implement initState
