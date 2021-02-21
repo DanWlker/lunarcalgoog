@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+import 'event_info.dart';
+
 class SaveAndRead {
   static Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();

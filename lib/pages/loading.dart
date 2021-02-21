@@ -12,7 +12,14 @@ class Loading extends StatefulWidget {
 class _LoadingState extends State<Loading> {
 
   void loadData() async {
-    List<EventInfo> eventsToPass = EventInfo.decode(await SaveAndRead.readData());
+    List<EventInfo> eventsToPass;
+
+    try {
+      eventsToPass = EventInfo.decode(await SaveAndRead.readData());
+    } catch (e) {
+      print("First Time opening");
+      eventsToPass = [];
+    }
     new Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
           context,
