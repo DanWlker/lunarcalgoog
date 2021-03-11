@@ -35,7 +35,6 @@ class SaveToGoogle {
     for(int i = 0; i < eventInfo.repeatFor; ++i) {
       Lunar lunCurrEventDate = LunSolConverter.solTolun(eventInfo.dateTime);
       lunCurrEventDate.lunarYear = eventInfo.yearModified.toInt() + i;
-      lunCurrEventDate.isLeap = LunSolConverter.isLeapYear(lunCurrEventDate.lunarYear);
       DateTime currEventDate = LunSolConverter.lunToSol(lunCurrEventDate);
 
       Event event = Event();
@@ -88,7 +87,6 @@ class SaveToGoogle {
     for(int i = 0; i < eventInfo.repeatFor; ++i) {
       Lunar lunCurrEventDate = LunSolConverter.solTolun(eventInfo.dateTime);
       lunCurrEventDate.lunarYear = eventInfo.yearModified+ i;
-      lunCurrEventDate.isLeap = LunSolConverter.isLeapYear(lunCurrEventDate.lunarYear);
       DateTime currEventDate = LunSolConverter.lunToSol(lunCurrEventDate);
 
       Event event = Event();
