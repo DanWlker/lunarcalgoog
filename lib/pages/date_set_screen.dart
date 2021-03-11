@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lunarcalgoog/objects_widgets/action_passer.dart';
 import 'package:lunarcalgoog/objects_widgets/event_info.dart';
+import 'package:lunarcalgoog/objects_widgets/lun_sol_converter.dart';
 
 class DateSetScreen extends StatefulWidget {
   EventInfo event;
@@ -84,7 +86,7 @@ class _DateSetScreenState extends State<DateSetScreen> {
                   ),
                 )
               ),
-              SizedBox(height: 59),
+              SizedBox(height: 60),
               // Date Chooser
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,7 +112,7 @@ class _DateSetScreenState extends State<DateSetScreen> {
                               overlayColor: MaterialStateProperty.resolveWith((state) => Colors.transparent),
                             ),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Text(
                                   '${dateController.toLocal()}'.split(' ')[0], //split string into a list then display the first one
@@ -120,17 +122,47 @@ class _DateSetScreenState extends State<DateSetScreen> {
                                     color: Color.fromARGB(255, 236, 239, 244),
                                   ),
                                 ),
+                                Icon(
+                                  Icons.arrow_drop_down_rounded,
+                                  size: 70,
+                                  color: Color.fromARGB(255, 236, 239, 244),
+                                ),
                               ]
                             )
                         ),
                       ),
                     ]
                   )
-
-
                 ],
               ),
-              SizedBox(height: 34),
+              SizedBox(height: 27),
+              //Show the selected date in lunar
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(),
+                  Text(
+                    'Date in lunar calendar',
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 236, 239, 244),
+                      fontSize: 20,
+                      letterSpacing: 0.9,
+                      fontFamily: 'ProductSans',
+                    ),
+                  ),
+                  Text(
+                    '${LunSolConverter.solTolun(dateController.toLocal())}',
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 236, 239, 244),
+                      fontSize: 30,
+                      letterSpacing: 0.9,
+                      fontFamily: 'ProductSans',
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ]
+              ),
+              SizedBox(height: 42),
               //Repeat for how many years
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -200,7 +232,7 @@ class _DateSetScreenState extends State<DateSetScreen> {
                   )
                 ],
               ),
-              SizedBox(height: 75),
+              SizedBox(height: 70),
               //save and delete
               drawButtons(),
             ],
