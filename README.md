@@ -8,3 +8,5 @@ Roadmap and planned things:
   - Input date in terms of lunar date
   - Display time left until the next event date
   - Bug and stress testing (It sometimes failes and gives me a operation too frequent error, need to stress test to ensure it does not happen any more)
+  - Upload application to google play store
+  - Design and insert logo for this application
