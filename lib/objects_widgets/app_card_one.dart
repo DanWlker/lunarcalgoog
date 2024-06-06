@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:lunarcalgoog/objects_widgets/action_passer.dart';
+import 'package:lunarcalgoog/objects_widgets/event_info.dart';
 import 'package:lunarcalgoog/objects_widgets/lun_sol_converter.dart';
 import 'package:lunarcalgoog/pages/date_set_screen.dart';
-import 'event_info.dart';
 
 class AppCardOne extends StatefulWidget {
+
+  AppCardOne({super.key, this.event, this.cardId, this.delete, this.save});
   EventInfo event;
   int cardId;
   Function delete;
   Function save;
-
-  AppCardOne({this.event, this.cardId, this.delete, this.save});
 
   @override
   _AppCardOneState createState() => _AppCardOneState();
@@ -19,7 +19,7 @@ class AppCardOne extends StatefulWidget {
 class _AppCardOneState extends State<AppCardOne> {
   List< List<int> > cardColor = [
     [255, 229, 233, 240],
-    [255, 216, 222, 233]
+    [255, 216, 222, 233],
   ];
 
   @override
@@ -34,26 +34,24 @@ class _AppCardOneState extends State<AppCardOne> {
                   _returnFromEventEditPage(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
+                  shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(9)),
-                  ),
-                  primary: Color.fromARGB(
+                  ), backgroundColor: Color.fromARGB(
                       cardColor[widget.cardId%2][0],
                       cardColor[widget.cardId%2][1],
                       cardColor[widget.cardId%2][2],
-                      cardColor[widget.cardId%2][3]),
+                      cardColor[widget.cardId%2][3],),
                   ),
                 child: Container(
-                  padding: EdgeInsets.fromLTRB(4, 20, 4, 20),
+                  padding: const EdgeInsets.fromLTRB(4, 20, 4, 20),
                   child: Row(
                       children: <Widget>[
                         Expanded(
-                          flex:1,
                           child: Text(
                             widget.event.title,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontFamily: 'ProductSans',
-                              fontSize: 17.0,
+                              fontSize: 17,
                               letterSpacing: 0.9,
                               color: Color.fromARGB(255, 59, 66, 82),
                             ),
@@ -66,24 +64,24 @@ class _AppCardOneState extends State<AppCardOne> {
                               children: [
                                 Text(
                                   LunSolConverter.solTolun(widget.event.dateTime).toString(),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontFamily: 'ProductSans',
-                                    fontSize: 17.0,
+                                    fontSize: 17,
                                     letterSpacing: 0.9,
                                     color: Color.fromARGB(255, 59, 66, 82),
                                   ),
                                 ),
                               ],
-                            )
-                        )
-                      ]
+                            ),
+                        ),
+                      ],
                   ),
                 ),
               ),
             ),
           ],
         ),
-        SizedBox(height:20),
+        const SizedBox(height:20),
       ],
     );
   }

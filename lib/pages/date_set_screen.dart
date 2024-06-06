@@ -1,13 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lunarcalgoog/objects_widgets/action_passer.dart';
 import 'package:lunarcalgoog/objects_widgets/event_info.dart';
 import 'package:lunarcalgoog/objects_widgets/lun_sol_converter.dart';
 
 class DateSetScreen extends StatefulWidget {
-  EventInfo event;
 
-  DateSetScreen({this.event});
+  DateSetScreen({super.key, this.event});
+  EventInfo event;
 
   @override
   _DateSetScreenState createState() => _DateSetScreenState();
@@ -28,15 +27,6 @@ class _DateSetScreenState extends State<DateSetScreen> {
 
   @override
   void initState() {
-    if(widget.event == null) {
-      widget.event = EventInfo(
-          eventID: '${DateTime.now().year}${DateTime.now().month}${DateTime.now().day}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().millisecond}${DateTime.now().microsecond}',
-          title: '',
-          dateTime: DateTime.now(),
-          repeatFor: 0);
-      showDelete = false;
-    }
-    // TODO: implement initState
     titleController.text = widget.event.title;
     dateController = widget.event.dateTime;
     repeatController.text = widget.event.repeatFor.toString();
@@ -46,27 +36,27 @@ class _DateSetScreenState extends State<DateSetScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 59, 66, 82),
+      backgroundColor: const Color.fromARGB(255, 59, 66, 82),
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 59, 66, 82),
+        backgroundColor: const Color.fromARGB(255, 59, 66, 82),
         elevation: 0,
       ),
 
       body: Padding(
-        padding: EdgeInsets.fromLTRB(20, 23, 20, 0),
+        padding: const EdgeInsets.fromLTRB(20, 23, 20, 0),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
               // Title
               TextField(
                 controller: titleController,
-                cursorColor: Color.fromARGB(255, 236, 239, 244),
-                style: TextStyle(
+                cursorColor: const Color.fromARGB(255, 236, 239, 244),
+                style: const TextStyle(
                   color: Color.fromARGB(255, 236, 239, 244),
                   fontSize: 25,
                   fontFamily: 'ProductSans',
                 ),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Title',
                   labelStyle: TextStyle(
                     color: Color.fromARGB(255, 236, 239, 244),
@@ -76,7 +66,7 @@ class _DateSetScreenState extends State<DateSetScreen> {
                   ),
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                        color: Color.fromARGB(255, 236, 239, 244)
+                        color: Color.fromARGB(255, 236, 239, 244),
                     ),
                   ),
                   focusedBorder: UnderlineInputBorder(
@@ -84,15 +74,15 @@ class _DateSetScreenState extends State<DateSetScreen> {
                         color: Color.fromARGB(255, 236, 239, 244),
                     ),
                   ),
-                )
+                ),
               ),
-              SizedBox(height: 60),
+              const SizedBox(height: 60),
               // Date Chooser
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Container(),
-                  Text(
+                  const Text(
                     'Select date of birth',
                     style: TextStyle(
                       color: Color.fromARGB(255, 236, 239, 244),
@@ -109,39 +99,39 @@ class _DateSetScreenState extends State<DateSetScreen> {
                               return pickDate(context);
                             },
                             style: ButtonStyle(
-                              overlayColor: MaterialStateProperty.resolveWith((state) => Colors.transparent),
+                              overlayColor: WidgetStateProperty.resolveWith((state) => Colors.transparent),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Text(
                                   '${dateController.toLocal()}'.split(' ')[0], //split string into a list then display the first one
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontFamily: 'Product Sans',
                                     fontSize: 50,
                                     color: Color.fromARGB(255, 236, 239, 244),
                                   ),
                                 ),
-                                Icon(
+                                const Icon(
                                   Icons.arrow_drop_down_rounded,
                                   size: 70,
                                   color: Color.fromARGB(255, 236, 239, 244),
                                 ),
-                              ]
-                            )
+                              ],
+                            ),
                         ),
                       ),
-                    ]
-                  )
+                    ],
+                  ),
                 ],
               ),
-              SizedBox(height: 27),
+              const SizedBox(height: 27),
               //Show the selected date in lunar
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Container(),
-                  Text(
+                  const Text(
                     'Date in lunar calendar',
                     style: TextStyle(
                       color: Color.fromARGB(255, 236, 239, 244),
@@ -152,7 +142,7 @@ class _DateSetScreenState extends State<DateSetScreen> {
                   ),
                   Text(
                     '${LunSolConverter.solTolun(dateController.toLocal())}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Color.fromARGB(255, 236, 239, 244),
                       fontSize: 30,
                       letterSpacing: 0.9,
@@ -160,21 +150,21 @@ class _DateSetScreenState extends State<DateSetScreen> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                ]
+                ],
               ),
-              SizedBox(height: 42),
+              const SizedBox(height: 42),
               //Repeat for how many years
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
+                  const Expanded(
                       flex: 2,
                       child: Icon(
                         Icons.replay,
                         color: Color.fromARGB(255, 236, 239, 244),
-                      )
+                      ),
                   ),
-                  Expanded(
+                  const Expanded(
                     flex: 5,
                     child: Text(
                       'Repeat for',
@@ -183,24 +173,24 @@ class _DateSetScreenState extends State<DateSetScreen> {
                         fontSize: 20,
                         letterSpacing: 0.9,
                         color: Color.fromARGB(255, 236, 239, 244),
-                      )
-                    )
+                      ),
+                    ),
                   ),
                   Expanded(
                     flex: 5,
                     child: TextField(
                         controller: repeatController,
-                        cursorColor: Color.fromARGB(255, 236, 239, 244),
+                        cursorColor: const Color.fromARGB(255, 236, 239, 244),
                         textAlign: TextAlign.end,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Color.fromARGB(255, 236, 239, 244),
                           fontSize: 25,
                           fontFamily: 'ProductSans',
                         ),
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             enabledBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 236, 239, 244)
+                                  color: Color.fromARGB(255, 236, 239, 244),
                               ),
                             ),
                             focusedBorder: UnderlineInputBorder(
@@ -213,12 +203,12 @@ class _DateSetScreenState extends State<DateSetScreen> {
                               color: Color.fromARGB(255, 236, 239, 244),
                               fontSize: 20,
                               fontFamily: 'ProductSans',
-                              letterSpacing: 0.9
-                          )
-                        )
+                              letterSpacing: 0.9,
+                          ),
+                        ),
                     ),
                   ),
-                  Expanded(
+                  const Expanded(
                     flex: 3,
                     child: Text(
                       '  years',
@@ -227,24 +217,24 @@ class _DateSetScreenState extends State<DateSetScreen> {
                         fontSize: 20,
                         letterSpacing: 0.9,
                         color: Color.fromARGB(255, 236, 239, 244),
-                      )
-                    )
-                  )
+                      ),
+                    ),
+                  ),
                 ],
               ),
-              SizedBox(height: 70),
+              const SizedBox(height: 70),
               //save and delete
               drawButtons(),
             ],
           ),
         ),
-      )
+      ),
     );
   }
 
   //date picker
-  void pickDate(BuildContext context) async {
-    DateTime datePicked = await showDatePicker(
+  Future<void> pickDate(BuildContext context) async {
+    final DateTime datePicked = await showDatePicker(
       context: context,
       initialDate: widget.event.dateTime,
       firstDate: DateTime(1900),
@@ -254,18 +244,19 @@ class _DateSetScreenState extends State<DateSetScreen> {
           data: ThemeData.dark(),
           child: child,
         );
-      }
+      },
     );
 
-    if (datePicked != null && datePicked != dateController)
+    if (datePicked != dateController) {
       setState(() {
         dateController = datePicked;
       });
+    }
   }
 
   //show delete or not
   Widget drawButtons() {
-    if(showDelete)
+    if(showDelete) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
@@ -275,29 +266,30 @@ class _DateSetScreenState extends State<DateSetScreen> {
           saveButton(),
         ],
       );
-    else
+    } else {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           //save
           saveButton(),
         ],
-      );;
+      );
+    }
   }
 
   Widget deleteButton() => TextButton(
       style: TextButton.styleFrom(
-          backgroundColor: Color.fromARGB(255, 128, 161, 192),
-          shape: RoundedRectangleBorder(
+          backgroundColor: const Color.fromARGB(255, 128, 161, 192),
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(8)),
-          )
+          ),
       ),
       onPressed: () {
         Navigator.pop(context, ActionPasser(action: 'Delete'));
       },
 
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(3, 5, 3, 5),
+      child: const Padding(
+        padding: EdgeInsets.fromLTRB(3, 5, 3, 5),
         child: Row(
           children: [
             Icon(
@@ -311,19 +303,19 @@ class _DateSetScreenState extends State<DateSetScreen> {
                   fontFamily: 'ProductSans',
                   letterSpacing: 0.9,
                   color: Color.fromARGB(255, 229, 233, 240),
-                )
+                ),
             ),
           ],
         ),
-      )
+      ),
   );
 
   Widget saveButton() => TextButton(
       style: TextButton.styleFrom(
-          backgroundColor: Color.fromARGB(255, 128, 161, 192),
-          shape: RoundedRectangleBorder(
+          backgroundColor: const Color.fromARGB(255, 128, 161, 192),
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(8)),
-          )
+          ),
       ),
       onPressed: () {
         Navigator.pop(
@@ -335,11 +327,11 @@ class _DateSetScreenState extends State<DateSetScreen> {
                   title: titleController.text,
                   dateTime: dateController,
                   repeatFor: int.parse(repeatController.text),
-                )
-            ));
+                ),
+            ),);
       },
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(6, 5, 6, 5),
+      child: const Padding(
+        padding: EdgeInsets.fromLTRB(6, 5, 6, 5),
         child: Row(
           children: [
             Icon(
@@ -353,10 +345,10 @@ class _DateSetScreenState extends State<DateSetScreen> {
                   fontFamily: 'ProductSans',
                   letterSpacing: 0.9,
                   color: Color.fromARGB(255, 229, 233, 240),
-                )
+                ),
             ),
           ],
         ),
-      )
+      ),
   );
 }

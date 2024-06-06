@@ -4,9 +4,9 @@ import 'package:lunarcalgoog/pages/loading.dart';
 void main() => runApp(MaterialApp(
   initialRoute: '/',
   routes: {
-    '/': (context) => Loading(),
-  }
-));
+    '/': (context) => const Loading(),
+  },
+),);
 
 
 

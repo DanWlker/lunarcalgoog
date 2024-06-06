@@ -1,7 +1,6 @@
 import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 
-import 'event_info.dart';
+import 'package:path_provider/path_provider.dart';
 
 class SaveAndRead {
   static Future<String> get _localPath async {
@@ -16,13 +15,13 @@ class SaveAndRead {
 
   static Future<File> writeData(String data) async {
     final file = await _localFile; //calls get _localFile
-    return file.writeAsString('$data');
+    return file.writeAsString(data);
   }
 
   static Future<String> readData() async {
     try{
       final file = await _localFile;
-      String contents = await file.readAsString();
+      final contents = await file.readAsString();
       return contents;
     } catch (e) {
       return '';
