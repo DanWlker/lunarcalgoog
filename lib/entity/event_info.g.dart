@@ -7,15 +7,15 @@ part of 'event_info.dart';
 // **************************************************************************
 
 EventInfo _$EventInfoFromJson(Map<String, dynamic> json) => EventInfo(
-      eventID: json['eventID'] as String,
       title: json['title'] as String,
       dateTime: DateTime.parse(json['dateTime'] as String),
       repeatFor: (json['repeatFor'] as num?)?.toInt(),
+      eventID: json['eventID'] as String?,
     );
 
 Map<String, dynamic> _$EventInfoToJson(EventInfo instance) => <String, dynamic>{
-      'eventID': instance.eventID,
       'title': instance.title,
       'dateTime': instance.dateTime.toIso8601String(),
       'repeatFor': instance.repeatFor,
+      'eventID': instance.eventID,
     };

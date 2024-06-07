@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -19,13 +18,16 @@ class _LoadingPageState extends State<LoadingPage> {
     List<EventInfo> storedEvents;
 
     try {
-      storedEvents = (jsonDecode(await SaveAndRead.readData()) as List)
-          .map((item) => EventInfo.fromJson(item as Map<String, dynamic>))
-          .toList();
+      storedEvents =
+          (jsonDecode(await SaveAndRead.readData()) as List).map((item) {
+        return EventInfo.fromJson(item as Map<String, dynamic>);
+      }).toList();
     } catch (e) {
-      log('First Time opening');
+      debugPrint(e.toString());
+      debugPrint('First Time opening');
       storedEvents = [];
     }
+    debugPrint(storedEvents.toString());
     await navigatorState.pushReplacement(
       PageRouteBuilder<void>(
         pageBuilder: (_, __, ___) => Home(events: storedEvents),

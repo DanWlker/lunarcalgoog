@@ -21,7 +21,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  @override //build will override the base class build function
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
