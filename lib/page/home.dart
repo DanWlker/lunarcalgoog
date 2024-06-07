@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:lunarcalgoog/objects_widgets/action_passer.dart';
-import 'package:lunarcalgoog/objects_widgets/app_card_one.dart';
-import 'package:lunarcalgoog/objects_widgets/event_info.dart';
-import 'package:lunarcalgoog/objects_widgets/save_and_read.dart';
-import 'package:lunarcalgoog/objects_widgets/save_to_google.dart';
-import 'package:lunarcalgoog/pages/date_set_screen.dart';
+import 'package:lunarcalgoog/entity/action_passer.dart';
+import 'package:lunarcalgoog/entity/event_info.dart';
+import 'package:lunarcalgoog/page/date_set_screen.dart';
+import 'package:lunarcalgoog/util/save_and_read.dart';
+import 'package:lunarcalgoog/util/save_to_google.dart';
+import 'package:lunarcalgoog/widget/app_card_one.dart';
 
 class Home extends StatefulWidget {
   const Home({
@@ -107,4 +107,3 @@ class _HomeState extends State<Home> {
     });
   }
 }
-

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lunarcalgoog/objects_widgets/action_passer.dart';
-import 'package:lunarcalgoog/objects_widgets/event_info.dart';
-import 'package:lunarcalgoog/objects_widgets/lun_sol_converter.dart';
-import 'package:lunarcalgoog/pages/date_set_screen.dart';
+import 'package:lunarcalgoog/entity/action_passer.dart';
+import 'package:lunarcalgoog/entity/event_info.dart';
+import 'package:lunarcalgoog/page/date_set_screen.dart';
+import 'package:lunarcalgoog/util/lun_sol_converter.dart';
 
 class AppCardOne extends StatelessWidget {
   const AppCardOne({
@@ -14,8 +14,8 @@ class AppCardOne extends StatelessWidget {
   });
 
   final EventInfo event;
-  final Function delete;
-  final Function save;
+  final VoidCallback delete;
+  final void Function(EventInfo) save;
   final Color color;
 
   @override
@@ -27,7 +27,8 @@ class AppCardOne extends StatelessWidget {
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
-                  _returnFromEventEditPage(context);
+                  final navigatorState = Navigator.of(context);
+                  _returnFromEventEditPage(navigatorState);
                 },
                 style: ElevatedButton.styleFrom(
                   shape: const RoundedRectangleBorder(
@@ -74,19 +75,19 @@ class AppCardOne extends StatelessWidget {
     );
   }
 
-  _returnFromEventEditPage(BuildContext context) async {
-    final ActionPasser result = await Navigator.push(
-      context,
+  Future<void> _returnFromEventEditPage(NavigatorState navigatorState) async {
+    final result = await navigatorState.push<ActionPasser>(
       MaterialPageRoute(
         builder: (context) => DateSetScreen(event: event),
       ),
     );
 
+    if (result == null) return;
+
     if (result.action == 'Save') {
-      widget.event = result.eventInfo;
       save(event);
     } else if (result.action == 'Delete') {
       delete();
-    } else {}
+    }
   }
 }

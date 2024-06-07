@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:lunarcalgoog/objects_widgets/event_info.dart';
-import 'package:lunarcalgoog/objects_widgets/save_and_read.dart';
-import 'package:lunarcalgoog/pages/home.dart';
+import 'package:lunarcalgoog/entity/event_info.dart';
+import 'package:lunarcalgoog/page/home.dart';
+import 'package:lunarcalgoog/util/save_and_read.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({super.key});

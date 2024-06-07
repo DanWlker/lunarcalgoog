@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lunarcalgoog/pages/loading_page.dart';
+import 'package:lunarcalgoog/page/loading_page.dart';
 
 void main() => runApp(
       MaterialApp(

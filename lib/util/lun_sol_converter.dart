@@ -1,4 +1,4 @@
-import 'package:lunar_calendar_converter/lunar_solar_converter.dart';
+import 'package:lunar/lunar.dart';
 
 class LunSolConverter {
   static DateTime lunToSol(Lunar lunDate) {

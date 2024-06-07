@@ -2,9 +2,8 @@ import 'dart:io';
 
 import 'package:googleapis/calendar/v3.dart';
 import 'package:googleapis_auth/auth_io.dart';
-import 'package:lunar_calendar_converter/lunar_solar_converter.dart';
-import 'package:lunarcalgoog/objects_widgets/event_info.dart';
-import 'package:lunarcalgoog/objects_widgets/lun_sol_converter.dart';
+import 'package:lunarcalgoog/entity/event_info.dart';
+import 'package:lunarcalgoog/util/lun_sol_converter.dart';
 import 'package:retry/retry.dart';
 import 'package:url_launcher/url_launcher.dart';
 

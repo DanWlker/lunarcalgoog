@@ -1,4 +1,4 @@
-import 'package:lunarcalgoog/objects_widgets/event_info.dart';
+import 'package:lunarcalgoog/entity/event_info.dart';
 
 class ActionPasser {
   ActionPasser({
@@ -9,4 +9,3 @@ class ActionPasser {
   String action;
   EventInfo eventInfo;
 }
-
