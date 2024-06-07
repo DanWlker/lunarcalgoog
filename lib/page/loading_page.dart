@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -18,7 +19,9 @@ class _LoadingPageState extends State<LoadingPage> {
     List<EventInfo> storedEvents;
 
     try {
-      storedEvents = EventInfo.decode(await SaveAndRead.readData());
+      storedEvents = (jsonDecode(await SaveAndRead.readData()) as List)
+          .map((item) => EventInfo.fromJson(item as Map<String, dynamic>))
+          .toList();
     } catch (e) {
       log('First Time opening');
       storedEvents = [];

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:lunarcalgoog/entity/action_passer.dart';
 import 'package:lunarcalgoog/entity/event_info.dart';
@@ -51,12 +53,11 @@ class _HomeState extends State<Home> {
                 setState(() {
                   SaveToGoogle.deleteEvent(event);
                   widget.events.remove(event);
-                  SaveAndRead.writeData(EventInfo.encode(widget.events));
+                  SaveAndRead.writeData(jsonEncode(widget.events));
                 });
               },
               save: (EventInfo eventFromChild) {
                 setState(() {
-                  eventFromChild.yearModified = DateTime.now().year;
                   for (var i = 0; i < widget.events.length; ++i) {
                     if (widget.events[i].eventID == eventFromChild.eventID) {
                       SaveToGoogle.editEvent(
@@ -67,7 +68,7 @@ class _HomeState extends State<Home> {
                       break;
                     }
                   }
-                  SaveAndRead.writeData(EventInfo.encode(widget.events));
+                  SaveAndRead.writeData(jsonEncode(widget.events));
                 });
               },
             );
@@ -91,18 +92,19 @@ class _HomeState extends State<Home> {
   Future<void> _returnFromEventCreatePage(NavigatorState navigatorState) async {
     final result = await navigatorState.push<ActionPasser>(
       MaterialPageRoute(
-        builder: (context) => DateSetScreen(),
+        builder: (context) => const DateSetScreen(),
       ),
     );
 
-    if (!mounted) return;
+    if (!mounted || result == null) return;
+
+    final ActionPasser(:action, :eventInfo) = result;
 
     setState(() {
-      if (result != null && result.action == 'Save') {
-        result.eventInfo.yearModified = DateTime.now().year;
-        widget.events.add(result.eventInfo);
-        SaveAndRead.writeData(EventInfo.encode(widget.events));
-        SaveToGoogle.insertEvent(result.eventInfo);
+      if (action == 'Save' && eventInfo != null) {
+        widget.events.add(eventInfo);
+        SaveAndRead.writeData(jsonEncode(widget.events));
+        SaveToGoogle.insertEvent(eventInfo);
       }
     });
   }

@@ -4,17 +4,20 @@ import 'package:lunarcalgoog/entity/event_info.dart';
 import 'package:lunarcalgoog/util/lun_sol_converter.dart';
 
 class DateSetScreen extends StatefulWidget {
-  DateSetScreen({super.key, this.event});
-  EventInfo event;
+  const DateSetScreen({
+    this.event,
+    super.key,
+  });
+  final EventInfo? event;
 
   @override
-  _DateSetScreenState createState() => _DateSetScreenState();
+  State<DateSetScreen> createState() => _DateSetScreenState();
 }
 
 class _DateSetScreenState extends State<DateSetScreen> {
   final titleController = TextEditingController();
   final repeatController = TextEditingController();
-  DateTime dateController;
+  DateTime selectedDate = DateTime.now();
   bool showDelete = true;
 
   @override
@@ -26,9 +29,11 @@ class _DateSetScreenState extends State<DateSetScreen> {
 
   @override
   void initState() {
-    titleController.text = widget.event.title;
-    dateController = widget.event.dateTime;
-    repeatController.text = widget.event.repeatFor.toString();
+    titleController.text = widget.event?.title ?? '';
+    if (widget.event?.dateTime case final DateTime eventDate) {
+      selectedDate = eventDate;
+    }
+    repeatController.text = widget.event?.repeatFor.toString() ?? '0';
     super.initState();
   }
 
@@ -94,17 +99,18 @@ class _DateSetScreenState extends State<DateSetScreen> {
                       Expanded(
                         child: TextButton(
                           onPressed: () {
-                            return pickDate(context);
+                            pickDate(context);
                           },
                           style: ButtonStyle(
                             overlayColor: WidgetStateProperty.resolveWith(
-                                (state) => Colors.transparent),
+                              (state) => Colors.transparent,
+                            ),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Text(
-                                '${dateController.toLocal()}'.split(' ')[
+                                '${selectedDate.toLocal()}'.split(' ')[
                                     0], //split string into a list then display the first one
                                 style: const TextStyle(
                                   fontFamily: 'Product Sans',
@@ -141,7 +147,7 @@ class _DateSetScreenState extends State<DateSetScreen> {
                     ),
                   ),
                   Text(
-                    '${LunSolConverter.solTolun(dateController.toLocal())}',
+                    '${LunSolConverter.solTolun(selectedDate.toLocal())}',
                     style: const TextStyle(
                       color: Color.fromARGB(255, 236, 239, 244),
                       fontSize: 30,
@@ -234,24 +240,18 @@ class _DateSetScreenState extends State<DateSetScreen> {
 
   //date picker
   Future<void> pickDate(BuildContext context) async {
-    final DateTime datePicked = await showDatePicker(
+    final datePicked = await showDatePicker(
       context: context,
-      initialDate: widget.event.dateTime,
+      initialDate: selectedDate,
       firstDate: DateTime(1900),
       lastDate: DateTime(2300),
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.dark(),
-          child: child,
-        );
-      },
     );
 
-    if (datePicked != dateController) {
-      setState(() {
-        dateController = datePicked;
-      });
-    }
+    if (datePicked == null || datePicked.compareTo(selectedDate) == 0) return;
+
+    setState(() {
+      selectedDate = datePicked;
+    });
   }
 
   //show delete or not
@@ -322,9 +322,9 @@ class _DateSetScreenState extends State<DateSetScreen> {
             ActionPasser(
               action: 'Save',
               eventInfo: EventInfo(
-                eventID: widget.event.eventID,
+                eventID: widget.event?.eventID,
                 title: titleController.text,
-                dateTime: dateController,
+                dateTime: selectedDate,
                 repeatFor: int.parse(repeatController.text),
               ),
             ),

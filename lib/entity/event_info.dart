@@ -5,10 +5,10 @@ part 'event_info.g.dart';
 @JsonSerializable()
 class EventInfo {
   EventInfo({
-    required this.eventID,
     required this.title,
     required this.dateTime,
     required this.repeatFor,
+    this.eventID,
     // this.yearModified,
   });
 
@@ -17,9 +17,9 @@ class EventInfo {
 
   Map<String, dynamic> toJson() => _$EventInfoToJson(this);
 
-  String eventID;
   String title;
   DateTime dateTime;
   int? repeatFor;
+  String? eventID;
   // int yearModified;
 }
