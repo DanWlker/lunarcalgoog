@@ -27,9 +27,14 @@ class _LoadingPageState extends State<LoadingPage> {
       storedEvents = [];
     }
     await navigatorState.pushReplacement(
-      MaterialPageRoute<void>(
-        builder: (context) => Home(events: storedEvents),
+      PageRouteBuilder<void>(
+        pageBuilder: (_, __, ___) => Home(events: storedEvents),
+        transitionsBuilder: (_, a, __, c) =>
+            FadeTransition(opacity: a, child: c),
       ),
+      // MaterialPageRoute<void>(
+      //   builder: (context) => Home(events: storedEvents),
+      // ),
     );
   }
 
@@ -44,7 +49,6 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor: Color.fromARGB(255, 59, 66, 82),
       body: Center(
         child: SpinKitRotatingCircle(
           color: Colors.white,

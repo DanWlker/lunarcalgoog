@@ -21,21 +21,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<Color> cardColors = [
-    const Color.fromARGB(255, 229, 233, 240),
-    const Color.fromARGB(255, 216, 222, 233),
-  ];
-
   @override //build will override the base class build function
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 46, 52, 64),
       appBar: AppBar(
         title: const Text(
           'Lunar Google Calendar Tool',
         ),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 59, 66, 82),
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(20, 35, 20, 0),
@@ -45,7 +38,6 @@ class _HomeState extends State<Home> {
             final event = widget.events[index];
             return AppCardOne(
               event: event,
-              color: cardColors[index % cardColors.length],
               delete: () {
                 setState(() {
                   SaveToGoogleV2.deleteEvent(event);
@@ -77,10 +69,8 @@ class _HomeState extends State<Home> {
           final navigatorState = Navigator.of(context);
           _returnFromEventCreatePage(navigatorState);
         },
-        backgroundColor: const Color.fromARGB(255, 229, 233, 240),
         child: const Icon(
           Icons.add,
-          color: Color.fromARGB(255, 59, 66, 82),
         ),
       ),
     );

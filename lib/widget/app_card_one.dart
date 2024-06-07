@@ -9,14 +9,12 @@ class AppCardOne extends StatelessWidget {
     required this.event,
     required this.delete,
     required this.save,
-    required this.color,
     super.key,
   });
 
   final EventInfo event;
   final VoidCallback delete;
   final void Function(EventInfo) save;
-  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +32,6 @@ class AppCardOne extends StatelessWidget {
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(9)),
                   ),
-                  backgroundColor: color,
                 ),
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(4, 20, 4, 20),
@@ -56,7 +53,6 @@ class AppCardOne extends StatelessWidget {
                               style: const TextStyle(
                                 fontSize: 17,
                                 letterSpacing: 0.9,
-                                color: Color.fromARGB(255, 59, 66, 82),
                               ),
                             ),
                           ],

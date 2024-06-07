@@ -39,9 +39,7 @@ class _DateSetScreenState extends State<DateSetScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 59, 66, 82),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 59, 66, 82),
         elevation: 0,
       ),
       body: Padding(
@@ -52,28 +50,17 @@ class _DateSetScreenState extends State<DateSetScreen> {
               // Title
               TextField(
                 controller: titleController,
-                cursorColor: const Color.fromARGB(255, 236, 239, 244),
                 style: const TextStyle(
-                  color: Color.fromARGB(255, 236, 239, 244),
                   fontSize: 25,
                 ),
                 decoration: const InputDecoration(
                   labelText: 'Title',
                   labelStyle: TextStyle(
-                    color: Color.fromARGB(255, 236, 239, 244),
                     fontSize: 20,
                     letterSpacing: 0.9,
                   ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color.fromARGB(255, 236, 239, 244),
-                    ),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color.fromARGB(255, 236, 239, 244),
-                    ),
-                  ),
+                  enabledBorder: UnderlineInputBorder(),
+                  focusedBorder: UnderlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 60),
@@ -85,7 +72,6 @@ class _DateSetScreenState extends State<DateSetScreen> {
                   const Text(
                     'Select date of birth',
                     style: TextStyle(
-                      color: Color.fromARGB(255, 236, 239, 244),
                       fontSize: 20,
                       letterSpacing: 0.9,
                     ),
@@ -112,13 +98,11 @@ class _DateSetScreenState extends State<DateSetScreen> {
                                 '${selectedDate.toLocal()}'.split(' ')[0],
                                 style: const TextStyle(
                                   fontSize: 40,
-                                  color: Color.fromARGB(255, 236, 239, 244),
                                 ),
                               ),
                               const Icon(
                                 Icons.arrow_drop_down_rounded,
                                 size: 70,
-                                color: Color.fromARGB(255, 236, 239, 244),
                               ),
                             ],
                           ),
@@ -137,7 +121,6 @@ class _DateSetScreenState extends State<DateSetScreen> {
                   const Text(
                     'Date in lunar calendar',
                     style: TextStyle(
-                      color: Color.fromARGB(255, 236, 239, 244),
                       fontSize: 20,
                       letterSpacing: 0.9,
                     ),
@@ -145,7 +128,6 @@ class _DateSetScreenState extends State<DateSetScreen> {
                   Text(
                     '${LunSolConverter.solTolun(selectedDate.toLocal())}',
                     style: const TextStyle(
-                      color: Color.fromARGB(255, 236, 239, 244),
                       fontSize: 30,
                       letterSpacing: 0.9,
                     ),
@@ -158,13 +140,10 @@ class _DateSetScreenState extends State<DateSetScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Expanded(
-                    flex: 2,
-                    child: Icon(
-                      Icons.replay,
-                      color: Color.fromARGB(255, 236, 239, 244),
-                    ),
+                  const Icon(
+                    Icons.replay,
                   ),
+                  const SizedBox(width: 8),
                   const Expanded(
                     flex: 5,
                     child: Text(
@@ -172,7 +151,6 @@ class _DateSetScreenState extends State<DateSetScreen> {
                       style: TextStyle(
                         fontSize: 20,
                         letterSpacing: 0.9,
-                        color: Color.fromARGB(255, 236, 239, 244),
                       ),
                     ),
                   ),
@@ -180,26 +158,15 @@ class _DateSetScreenState extends State<DateSetScreen> {
                     flex: 5,
                     child: TextField(
                       controller: repeatController,
-                      cursorColor: const Color.fromARGB(255, 236, 239, 244),
                       textAlign: TextAlign.end,
                       style: const TextStyle(
-                        color: Color.fromARGB(255, 236, 239, 244),
                         fontSize: 25,
                       ),
                       decoration: const InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color.fromARGB(255, 236, 239, 244),
-                          ),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color.fromARGB(255, 236, 239, 244),
-                          ),
-                        ),
+                        enabledBorder: UnderlineInputBorder(),
+                        focusedBorder: UnderlineInputBorder(),
                         hintText: 'X',
                         hintStyle: TextStyle(
-                          color: Color.fromARGB(255, 236, 239, 244),
                           fontSize: 20,
                           letterSpacing: 0.9,
                         ),
@@ -213,7 +180,6 @@ class _DateSetScreenState extends State<DateSetScreen> {
                       style: TextStyle(
                         fontSize: 20,
                         letterSpacing: 0.9,
-                        color: Color.fromARGB(255, 236, 239, 244),
                       ),
                     ),
                   ),
@@ -261,7 +227,6 @@ class _DateSetScreenState extends State<DateSetScreen> {
 
   Widget deleteButton(String eventId) => TextButton(
         style: TextButton.styleFrom(
-          backgroundColor: const Color.fromARGB(255, 128, 161, 192),
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
@@ -275,14 +240,12 @@ class _DateSetScreenState extends State<DateSetScreen> {
             children: [
               Icon(
                 Icons.delete,
-                color: Color.fromARGB(255, 229, 233, 240),
               ),
               Text(
                 'Delete',
                 style: TextStyle(
                   fontSize: 20,
                   letterSpacing: 0.9,
-                  color: Color.fromARGB(255, 229, 233, 240),
                 ),
               ),
             ],
@@ -292,7 +255,6 @@ class _DateSetScreenState extends State<DateSetScreen> {
 
   Widget saveButton() => TextButton(
         style: TextButton.styleFrom(
-          backgroundColor: const Color.fromARGB(255, 128, 161, 192),
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
@@ -316,14 +278,12 @@ class _DateSetScreenState extends State<DateSetScreen> {
             children: [
               Icon(
                 Icons.save,
-                color: Color.fromARGB(255, 229, 233, 240),
               ),
               Text(
                 'Save',
                 style: TextStyle(
                   fontSize: 20,
                   letterSpacing: 0.9,
-                  color: Color.fromARGB(255, 229, 233, 240),
                 ),
               ),
             ],
