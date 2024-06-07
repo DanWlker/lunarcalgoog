@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lunarcalgoog/entity/action_passer.dart';
+import 'package:lunarcalgoog/entity/actions.dart';
 import 'package:lunarcalgoog/entity/event_info.dart';
 import 'package:lunarcalgoog/page/date_set_screen.dart';
 import 'package:lunarcalgoog/util/lun_sol_converter.dart';
@@ -54,7 +54,6 @@ class AppCardOne extends StatelessWidget {
                               LunSolConverter.solTolun(event.dateTime)
                                   .toString(),
                               style: const TextStyle(
-                                fontFamily: 'ProductSans',
                                 fontSize: 17,
                                 letterSpacing: 0.9,
                                 color: Color.fromARGB(255, 59, 66, 82),
@@ -76,18 +75,19 @@ class AppCardOne extends StatelessWidget {
   }
 
   Future<void> _returnFromEventEditPage(NavigatorState navigatorState) async {
-    final result = await navigatorState.push<ActionPasser>(
+    final result = await navigatorState.push<EventActions>(
       MaterialPageRoute(
         builder: (context) => DateSetScreen(event: event),
       ),
     );
 
-    if (result == null) return;
-
-    if (result.action == 'Save') {
-      save(event);
-    } else if (result.action == 'Delete') {
-      delete();
+    switch (result) {
+      case null:
+        break;
+      case SaveAction(:final event):
+        save(event);
+      case DeleteAction():
+        delete();
     }
   }
 }

@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:lunarcalgoog/entity/action_passer.dart';
+import 'package:lunarcalgoog/entity/actions.dart';
 import 'package:lunarcalgoog/entity/event_info.dart';
 import 'package:lunarcalgoog/page/date_set_screen.dart';
 import 'package:lunarcalgoog/util/save_and_read.dart';
-import 'package:lunarcalgoog/util/save_to_google.dart';
+import 'package:lunarcalgoog/util/save_to_google_v2.dart';
 import 'package:lunarcalgoog/widget/app_card_one.dart';
 
 class Home extends StatefulWidget {
@@ -33,9 +33,6 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: const Text(
           'Lunar Google Calendar Tool',
-          style: TextStyle(
-            fontFamily: 'ProductSans',
-          ),
         ),
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 59, 66, 82),
@@ -51,7 +48,7 @@ class _HomeState extends State<Home> {
               color: cardColors[index % cardColors.length],
               delete: () {
                 setState(() {
-                  SaveToGoogle.deleteEvent(event);
+                  SaveToGoogleV2.deleteEvent(event);
                   widget.events.remove(event);
                   SaveAndRead.writeData(jsonEncode(widget.events));
                 });
@@ -60,7 +57,7 @@ class _HomeState extends State<Home> {
                 setState(() {
                   for (var i = 0; i < widget.events.length; ++i) {
                     if (widget.events[i].eventID == eventFromChild.eventID) {
-                      SaveToGoogle.editEvent(
+                      SaveToGoogleV2.editEvent(
                         widget.events[i],
                         eventFromChild,
                       );
@@ -90,7 +87,7 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> _returnFromEventCreatePage(NavigatorState navigatorState) async {
-    final result = await navigatorState.push<ActionPasser>(
+    final result = await navigatorState.push<EventActions>(
       MaterialPageRoute(
         builder: (context) => const DateSetScreen(),
       ),
@@ -98,14 +95,12 @@ class _HomeState extends State<Home> {
 
     if (!mounted || result == null) return;
 
-    final ActionPasser(:action, :eventInfo) = result;
-
-    setState(() {
-      if (action == 'Save' && eventInfo != null) {
-        widget.events.add(eventInfo);
+    if (result case SaveAction(:final event)) {
+      setState(() {
+        widget.events.add(event);
         SaveAndRead.writeData(jsonEncode(widget.events));
-        SaveToGoogle.insertEvent(eventInfo);
-      }
-    });
+        SaveToGoogleV2.insertEvent(event);
+      });
+    }
   }
 }
