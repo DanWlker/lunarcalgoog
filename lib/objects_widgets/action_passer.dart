@@ -1,7 +1,12 @@
 import 'package:lunarcalgoog/objects_widgets/event_info.dart';
 
 class ActionPasser {
-  ActionPasser({this.action, this.eventInfo});
+  ActionPasser({
+    required this.action,
+    required this.eventInfo,
+  });
+
   String action;
   EventInfo eventInfo;
 }
+
