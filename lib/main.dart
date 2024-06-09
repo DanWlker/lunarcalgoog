@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lunarcalgoog/page/loading_page.dart';
+import 'package:lunarcalgoog/page/load_from_storage_page.dart';
 
 void main() => runApp(
       const ProviderScope(
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark(),
       initialRoute: '/',
       routes: {
-        '/': (context) => const LoadingPage(),
+        '/': (context) => const LoadFromStoragePage(),
       },
     );
   }

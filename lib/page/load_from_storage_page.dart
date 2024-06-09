@@ -1,19 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lunarcalgoog/entity/event_info.dart';
 import 'package:lunarcalgoog/page/google_sign_in_page.dart';
 import 'package:lunarcalgoog/util/save_and_read.dart';
 
-class LoadingPage extends StatefulWidget {
-  const LoadingPage({super.key});
+class LoadFromStoragePage extends StatefulWidget {
+  const LoadFromStoragePage({super.key});
 
   @override
-  State<LoadingPage> createState() => _LoadingPageState();
+  State<LoadFromStoragePage> createState() => _LoadFromStoragePageState();
 }
 
-class _LoadingPageState extends State<LoadingPage> {
+class _LoadFromStoragePageState extends State<LoadFromStoragePage> {
   Future<void> loadData(NavigatorState navigatorState) async {
     List<EventInfo> storedEvents;
 
@@ -29,15 +28,17 @@ class _LoadingPageState extends State<LoadingPage> {
     }
     debugPrint(storedEvents.toString());
 
-    await navigatorState.pushReplacement(
-      PageRouteBuilder<void>(
-        pageBuilder: (_, __, ___) => GoogleSignInPage(
-          storedEvents: storedEvents,
+    Future.delayed(const Duration(seconds: 1), () {
+      navigatorState.pushReplacement(
+        PageRouteBuilder<void>(
+          pageBuilder: (_, __, ___) => GoogleSignInPage(
+            storedEvents: storedEvents,
+          ),
+          transitionsBuilder: (_, a, __, c) =>
+              FadeTransition(opacity: a, child: c),
         ),
-        transitionsBuilder: (_, a, __, c) =>
-            FadeTransition(opacity: a, child: c),
-      ),
-    );
+      );
+    });
   }
 
   @override
@@ -52,10 +53,7 @@ class _LoadingPageState extends State<LoadingPage> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: SpinKitRotatingCircle(
-          color: Colors.white,
-          size: 60,
-        ),
+        child: Text('Attempting to load history from storage...'),
       ),
     );
   }

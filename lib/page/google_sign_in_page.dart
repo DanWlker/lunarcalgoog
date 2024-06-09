@@ -46,7 +46,7 @@ class GoogleSignInPage extends ConsumerWidget {
     return Scaffold(
       body: Center(
         child: switch (googleSignInRes) {
-          AsyncLoading() => const Text('Loading...'),
+          AsyncLoading() => const Text('Attempting to sign you in...'),
           AsyncError() => signInButton,
           AsyncData(:final value) when value == null => signInButton,
           AsyncData(:final value) when value != null => Column(
