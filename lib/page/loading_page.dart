@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lunarcalgoog/entity/event_info.dart';
-import 'package:lunarcalgoog/page/home.dart';
+import 'package:lunarcalgoog/page/google_sign_in_page.dart';
 import 'package:lunarcalgoog/util/save_and_read.dart';
 
 class LoadingPage extends StatefulWidget {
@@ -28,15 +28,15 @@ class _LoadingPageState extends State<LoadingPage> {
       storedEvents = [];
     }
     debugPrint(storedEvents.toString());
+
     await navigatorState.pushReplacement(
       PageRouteBuilder<void>(
-        pageBuilder: (_, __, ___) => Home(events: storedEvents),
+        pageBuilder: (_, __, ___) => GoogleSignInPage(
+          storedEvents: storedEvents,
+        ),
         transitionsBuilder: (_, a, __, c) =>
             FadeTransition(opacity: a, child: c),
       ),
-      // MaterialPageRoute<void>(
-      //   builder: (context) => Home(events: storedEvents),
-      // ),
     );
   }
 

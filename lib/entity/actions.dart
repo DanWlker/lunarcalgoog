@@ -13,4 +13,3 @@ class DeleteAction implements EventActions {
 
   final String eventId;
 }
-
