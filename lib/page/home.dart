@@ -6,6 +6,7 @@ import 'package:lunarcalgoog/entity/actions.dart';
 import 'package:lunarcalgoog/entity/event_info.dart';
 import 'package:lunarcalgoog/page/date_set_screen.dart';
 import 'package:lunarcalgoog/provider/event_list_provider.dart';
+import 'package:lunarcalgoog/provider/google_sign_in_provider.dart';
 import 'package:lunarcalgoog/util/save_and_read.dart';
 import 'package:lunarcalgoog/util/save_to_google_v2.dart';
 import 'package:lunarcalgoog/widget/app_card_one.dart';
@@ -40,7 +41,12 @@ class Home extends ConsumerWidget {
               delete: () {
                 SaveToGoogleV2.deleteEvent(event);
                 events.remove(event);
-                SaveAndRead.writeData(jsonEncode(events));
+                SaveAndRead.writeData(
+                  identifier:
+                      ref.read(googleSignInProviderSilent).value?.email ??
+                          'unknown',
+                  data: jsonEncode(events),
+                );
               },
               save: (EventInfo eventFromChild) {
                 for (var i = 0; i < events.length; ++i) {
@@ -53,7 +59,12 @@ class Home extends ConsumerWidget {
                     break;
                   }
                 }
-                SaveAndRead.writeData(jsonEncode(events));
+                SaveAndRead.writeData(
+                  identifier:
+                      ref.read(googleSignInProviderSilent).value?.email ??
+                          'unknown',
+                  data: jsonEncode(events),
+                );
               },
             );
           },
@@ -84,7 +95,11 @@ class Home extends ConsumerWidget {
       final events = ref.read(eventListProvider).value;
       if (events == null) return;
       events.add(event);
-      await SaveAndRead.writeData(jsonEncode(events));
+      await SaveAndRead.writeData(
+        identifier:
+            ref.read(googleSignInProviderSilent).value?.email ?? 'unknown',
+        data: jsonEncode(events),
+      );
       SaveToGoogleV2.insertEvent(event);
     }
   }

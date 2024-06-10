@@ -8,18 +8,21 @@ class SaveAndRead {
     return directory.path;
   }
 
-  static Future<File> get _localFile async {
+  static Future<File> _geFileFor(String identifier) async {
     final path = await _localPath;
-    return File('$path/data.txt');
+    return File('$path/${identifier}_data.txt');
   }
 
-  static Future<File> writeData(String data) async {
-    final file = await _localFile;
+  static Future<File> writeData({
+    required String identifier,
+    required String data,
+  }) async {
+    final file = await _geFileFor(identifier);
     return file.writeAsString(data);
   }
 
-  static Future<String> readData() async {
-    final file = await _localFile;
+  static Future<String> readData(String identifier) async {
+    final file = await _geFileFor(identifier);
     final contents = await file.readAsString();
     return contents;
   }
