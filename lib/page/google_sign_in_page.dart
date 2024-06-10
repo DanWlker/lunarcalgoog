@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:lunarcalgoog/entity/event_info.dart';
-import 'package:lunarcalgoog/page/home.dart';
 import 'package:lunarcalgoog/provider/google_sign_in_provider.dart';
 
 class GoogleSignInPage extends ConsumerWidget {
   const GoogleSignInPage({
-    required this.storedEvents,
+    required this.onSignInSuccessful,
     super.key,
   });
 
-  final List<EventInfo> storedEvents;
+  final VoidCallback onSignInSuccessful;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,17 +20,7 @@ class GoogleSignInPage extends ConsumerWidget {
         return;
       }
       if (next case AsyncData(:final value) when value != null) {
-        Future.delayed(const Duration(seconds: 1), () {
-          Navigator.of(context).pushReplacement(
-            PageRouteBuilder<void>(
-              pageBuilder: (_, __, ___) => Home(
-                events: storedEvents,
-              ),
-              transitionsBuilder: (_, a, __, c) =>
-                  FadeTransition(opacity: a, child: c),
-            ),
-          );
-        });
+        onSignInSuccessful();
       }
     });
 

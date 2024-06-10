@@ -7,5 +7,5 @@ final _googleSignIn = GoogleSignIn(
 );
 
 final googleSignInProvider = FutureProvider<GoogleSignInAccount?>((ref) async {
-  return (await _googleSignIn.signInSilently()) ?? await _googleSignIn.signIn();
+  return _googleSignIn.signInSilently();
 });

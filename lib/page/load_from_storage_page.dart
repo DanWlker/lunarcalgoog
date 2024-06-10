@@ -2,11 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:lunarcalgoog/entity/event_info.dart';
-import 'package:lunarcalgoog/page/google_sign_in_page.dart';
 import 'package:lunarcalgoog/util/save_and_read.dart';
 
 class LoadFromStoragePage extends StatefulWidget {
-  const LoadFromStoragePage({super.key});
+  const LoadFromStoragePage({
+    required this.onLoadSuccessful,
+    super.key,
+  });
+
+  final void Function(List<EventInfo>) onLoadSuccessful;
 
   @override
   State<LoadFromStoragePage> createState() => _LoadFromStoragePageState();
@@ -28,17 +32,7 @@ class _LoadFromStoragePageState extends State<LoadFromStoragePage> {
     }
     debugPrint(storedEvents.toString());
 
-    Future.delayed(const Duration(seconds: 1), () {
-      navigatorState.pushReplacement(
-        PageRouteBuilder<void>(
-          pageBuilder: (_, __, ___) => GoogleSignInPage(
-            storedEvents: storedEvents,
-          ),
-          transitionsBuilder: (_, a, __, c) =>
-              FadeTransition(opacity: a, child: c),
-        ),
-      );
-    });
+    widget.onLoadSuccessful(storedEvents);
   }
 
   @override
