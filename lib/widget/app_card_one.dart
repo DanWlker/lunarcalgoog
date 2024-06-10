@@ -18,55 +18,34 @@ class AppCardOne extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
+    return ElevatedButton(
+      onPressed: () {
+        final navigatorState = Navigator.of(context);
+        _returnFromEventEditPage(navigatorState);
+      },
+      style: ElevatedButton.styleFrom(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+      ),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(4, 20, 4, 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () {
-                  final navigatorState = Navigator.of(context);
-                  _returnFromEventEditPage(navigatorState);
-                },
-                style: ElevatedButton.styleFrom(
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(9)),
-                  ),
-                ),
-                child: Container(
-                  padding: const EdgeInsets.fromLTRB(4, 20, 4, 20),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Text(
-                          event.title,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              LunSolConverter.solTolun(event.dateTime)
-                                  .toString(),
-                              style: const TextStyle(
-                                fontSize: 17,
-                                letterSpacing: 0.9,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+            Text(
+              event.title,
+            ),
+            Text(
+              LunSolConverter.solTolun(event.dateTime).toString(),
+              style: const TextStyle(
+                fontSize: 17,
+                letterSpacing: 0.9,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 20),
-      ],
+      ),
     );
   }
 

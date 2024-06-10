@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lunarcalgoog/entity/actions.dart';
 import 'package:lunarcalgoog/entity/event_info.dart';
 import 'package:lunarcalgoog/util/lun_sol_converter.dart';
+import 'package:lunarcalgoog/util/random_id_generator.dart';
 
 class DateSetScreen extends StatefulWidget {
   const DateSetScreen({
@@ -264,7 +265,7 @@ class _DateSetScreenState extends State<DateSetScreen> {
             context,
             SaveAction(
               EventInfo(
-                eventID: widget.event?.eventID,
+                eventID: widget.event?.eventID ?? uuid.v4().replaceAll('-', ''),
                 title: titleController.text,
                 dateTime: selectedDate,
                 repeatFor: int.parse(repeatController.text),

@@ -16,28 +16,36 @@ class SaveToGoogleV2 {
   static void editEvent(EventInfo event, EventInfo eventFromChild) {}
 
   static Future<void> insertEvent(EventInfo eventInfo) async {
+    print(eventInfo.repeatFor);
     final eventsToSend = <Event>[];
 
     for (var i = 0; i < eventInfo.repeatFor; ++i) {
       final eventDateLunar = LunSolConverter.solTolun(eventInfo.dateTime);
       final recordEventDateLunar = Lunar.fromYmd(
-        eventDateLunar.getYear() + 1,
+        eventDateLunar.getYear() + i,
         eventDateLunar.getMonth(),
         eventDateLunar.getDay(),
       );
       final recordEventDate = LunSolConverter.lunToSol(recordEventDateLunar);
 
       final event = Event(
-        id: '${eventInfo.eventID}_$i',
+        id: '${eventInfo.eventID}$i',
         summary: eventInfo.title,
         start: EventDateTime(date: recordEventDate),
+        end: EventDateTime(
+          date: recordEventDate.add(
+            const Duration(days: 1),
+          ),
+        ),
       );
 
       eventsToSend.add(event);
     }
 
     for (var i = 0; i < eventsToSend.length; ++i) {
-      print('${eventsToSend[i].id}, ${eventsToSend[i].start?.date}');
+      print(
+        '${eventsToSend[i].id}, ${eventsToSend[i].start?.date}, ${eventsToSend[i].end?.date}',
+      );
     }
 
     final client = await googleSignIn.authenticatedClient();
@@ -57,5 +65,6 @@ class SaveToGoogleV2 {
         ),
       );
     }
+    print('Insert successful');
   }
 }

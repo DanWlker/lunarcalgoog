@@ -11,12 +11,18 @@ import 'package:lunarcalgoog/util/save_and_read.dart';
 import 'package:lunarcalgoog/util/save_to_google_v2.dart';
 import 'package:lunarcalgoog/widget/app_card_one.dart';
 
-class Home extends ConsumerWidget {
+class Home extends ConsumerStatefulWidget {
   const Home({
     super.key,
   });
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<Home> createState() => _HomeState();
+}
+
+class _HomeState extends ConsumerState<Home> {
+  @override
+  Widget build(BuildContext context) {
     final events = ref.watch(eventListProvider).value;
 
     if (events == null) {
@@ -32,40 +38,57 @@ class Home extends ConsumerWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(20, 35, 20, 0),
-        child: ListView.builder(
+        child: ListView.separated(
           itemCount: events.length,
+          separatorBuilder: (context, index) {
+            return const SizedBox(height: 16);
+          },
           itemBuilder: (context, index) {
             final event = events[index];
-            return AppCardOne(
-              event: event,
-              delete: () {
-                SaveToGoogleV2.deleteEvent(event);
-                events.remove(event);
-                SaveAndRead.writeData(
-                  identifier:
-                      ref.read(googleSignInProviderSilent).value?.email ??
-                          'unknown',
-                  data: jsonEncode(events),
-                );
-              },
-              save: (EventInfo eventFromChild) {
-                for (var i = 0; i < events.length; ++i) {
-                  if (events[i].eventID == eventFromChild.eventID) {
-                    SaveToGoogleV2.editEvent(
-                      events[i],
-                      eventFromChild,
-                    );
-                    events[i] = eventFromChild;
-                    break;
-                  }
-                }
-                SaveAndRead.writeData(
-                  identifier:
-                      ref.read(googleSignInProviderSilent).value?.email ??
-                          'unknown',
-                  data: jsonEncode(events),
-                );
-              },
+            return Row(
+              children: [
+                Expanded(
+                  child: AppCardOne(
+                    event: event,
+                    delete: () {
+                      SaveToGoogleV2.deleteEvent(event);
+                      events.remove(event);
+                      SaveAndRead.writeData(
+                        identifier:
+                            ref.read(googleSignInProviderSilent).value?.email ??
+                                'unknown',
+                        data: jsonEncode(events),
+                      );
+                    },
+                    save: (EventInfo eventFromChild) {
+                      for (var i = 0; i < events.length; ++i) {
+                        if (events[i].eventID == eventFromChild.eventID) {
+                          SaveToGoogleV2.editEvent(
+                            events[i],
+                            eventFromChild,
+                          );
+                          events[i] = eventFromChild;
+                          break;
+                        }
+                      }
+                      SaveAndRead.writeData(
+                        identifier:
+                            ref.read(googleSignInProviderSilent).value?.email ??
+                                'unknown',
+                        data: jsonEncode(events),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(width: 8),
+                TextButton(
+                  onPressed: () {
+                    SaveToGoogleV2.insertEvent(event);
+                  },
+                  style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                  child: const Icon(Icons.sync),
+                ),
+              ],
             );
           },
         ),
@@ -94,13 +117,14 @@ class Home extends ConsumerWidget {
     if (result case SaveAction(:final event)) {
       final events = ref.read(eventListProvider).value;
       if (events == null) return;
-      events.add(event);
+      setState(() {
+        events.add(event);
+      });
       await SaveAndRead.writeData(
         identifier:
             ref.read(googleSignInProviderSilent).value?.email ?? 'unknown',
         data: jsonEncode(events),
       );
-      await SaveToGoogleV2.insertEvent(event);
     }
   }
 }
