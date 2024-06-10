@@ -7,8 +7,8 @@ class EventInfo {
   EventInfo({
     required this.title,
     required this.dateTime,
-    required this.repeatFor,
-    this.eventID,
+    required this.eventID,
+    this.repeatFor = 1,
     // this.yearModified,
   });
 
@@ -19,7 +19,7 @@ class EventInfo {
 
   String title;
   DateTime dateTime;
-  int? repeatFor;
-  String? eventID;
+  int repeatFor;
+  String eventID;
   // int yearModified;
 }

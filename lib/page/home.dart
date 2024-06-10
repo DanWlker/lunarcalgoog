@@ -100,7 +100,7 @@ class Home extends ConsumerWidget {
             ref.read(googleSignInProviderSilent).value?.email ?? 'unknown',
         data: jsonEncode(events),
       );
-      SaveToGoogleV2.insertEvent(event);
+      await SaveToGoogleV2.insertEvent(event);
     }
   }
 }
