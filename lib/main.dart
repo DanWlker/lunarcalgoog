@@ -30,13 +30,11 @@ class MyApp extends StatelessWidget {
                       navigatorState.pushReplacement(
                         PageRouteBuilder<void>(
                           pageBuilder: (_, __, ___) => LoadFromStoragePage(
-                            onLoadSuccessful: (storedEvents) {
+                            onLoadSuccessful: () {
                               Future.delayed(const Duration(seconds: 1), () {
                                 navigatorState.pushReplacement(
                                   PageRouteBuilder<void>(
-                                    pageBuilder: (_, __, ___) => Home(
-                                      events: storedEvents,
-                                    ),
+                                    pageBuilder: (_, __, ___) => const Home(),
                                     transitionsBuilder: (_, a, __, c) =>
                                         FadeTransition(opacity: a, child: c),
                                   ),

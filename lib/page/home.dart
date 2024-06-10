@@ -1,28 +1,27 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lunarcalgoog/entity/actions.dart';
 import 'package:lunarcalgoog/entity/event_info.dart';
 import 'package:lunarcalgoog/page/date_set_screen.dart';
+import 'package:lunarcalgoog/provider/event_list_provider.dart';
 import 'package:lunarcalgoog/util/save_and_read.dart';
 import 'package:lunarcalgoog/util/save_to_google_v2.dart';
 import 'package:lunarcalgoog/widget/app_card_one.dart';
 
-class Home extends StatefulWidget {
+class Home extends ConsumerWidget {
   const Home({
-    required this.events,
     super.key,
   });
-
-  final List<EventInfo> events;
-
   @override
-  State<Home> createState() => _HomeState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final events = ref.watch(eventListProvider).value;
 
-class _HomeState extends State<Home> {
-  @override
-  Widget build(BuildContext context) {
+    if (events == null) {
+      return const SizedBox.shrink();
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -33,32 +32,28 @@ class _HomeState extends State<Home> {
       body: Padding(
         padding: const EdgeInsets.fromLTRB(20, 35, 20, 0),
         child: ListView.builder(
-          itemCount: widget.events.length,
+          itemCount: events.length,
           itemBuilder: (context, index) {
-            final event = widget.events[index];
+            final event = events[index];
             return AppCardOne(
               event: event,
               delete: () {
-                setState(() {
-                  SaveToGoogleV2.deleteEvent(event);
-                  widget.events.remove(event);
-                  SaveAndRead.writeData(jsonEncode(widget.events));
-                });
+                SaveToGoogleV2.deleteEvent(event);
+                events.remove(event);
+                SaveAndRead.writeData(jsonEncode(events));
               },
               save: (EventInfo eventFromChild) {
-                setState(() {
-                  for (var i = 0; i < widget.events.length; ++i) {
-                    if (widget.events[i].eventID == eventFromChild.eventID) {
-                      SaveToGoogleV2.editEvent(
-                        widget.events[i],
-                        eventFromChild,
-                      );
-                      widget.events[i] = eventFromChild;
-                      break;
-                    }
+                for (var i = 0; i < events.length; ++i) {
+                  if (events[i].eventID == eventFromChild.eventID) {
+                    SaveToGoogleV2.editEvent(
+                      events[i],
+                      eventFromChild,
+                    );
+                    events[i] = eventFromChild;
+                    break;
                   }
-                  SaveAndRead.writeData(jsonEncode(widget.events));
-                });
+                }
+                SaveAndRead.writeData(jsonEncode(events));
               },
             );
           },
@@ -67,7 +62,7 @@ class _HomeState extends State<Home> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           final navigatorState = Navigator.of(context);
-          _returnFromEventCreatePage(navigatorState);
+          _returnFromEventCreatePage(navigatorState, ref);
         },
         child: const Icon(
           Icons.add,
@@ -76,21 +71,21 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Future<void> _returnFromEventCreatePage(NavigatorState navigatorState) async {
+  Future<void> _returnFromEventCreatePage(
+    NavigatorState navigatorState,
+    WidgetRef ref,
+  ) async {
     final result = await navigatorState.push<EventActions>(
       MaterialPageRoute(
         builder: (context) => const DateSetScreen(),
       ),
     );
-
-    if (!mounted || result == null) return;
-
     if (result case SaveAction(:final event)) {
-      setState(() {
-        widget.events.add(event);
-        SaveAndRead.writeData(jsonEncode(widget.events));
-        SaveToGoogleV2.insertEvent(event);
-      });
+      final events = ref.read(eventListProvider).value;
+      if (events == null) return;
+      events.add(event);
+      await SaveAndRead.writeData(jsonEncode(events));
+      SaveToGoogleV2.insertEvent(event);
     }
   }
 }

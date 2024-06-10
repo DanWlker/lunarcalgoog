@@ -13,9 +13,9 @@ class GoogleSignInPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final googleSignInRes = ref.watch(googleSignInProvider);
+    final googleSignInRes = ref.watch(googleSignInProviderSilent);
 
-    ref.listen(googleSignInProvider, (prev, next) {
+    ref.listen(googleSignInProviderSilent, (prev, next) {
       if (prev case AsyncData(:final value) when value != null) {
         return;
       }
@@ -25,8 +25,9 @@ class GoogleSignInPage extends ConsumerWidget {
     });
 
     final signInButton = TextButton(
-      onPressed: () {
-        ref.invalidate(googleSignInProvider);
+      onPressed: () async {
+        await googleSignIn.signIn();
+        ref.invalidate(googleSignInProviderSilent);
       },
       child: const Text('Sign In'),
     );
