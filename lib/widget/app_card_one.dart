@@ -14,7 +14,7 @@ class AppCardOne extends StatelessWidget {
 
   final EventInfo event;
   final VoidCallback delete;
-  final void Function(EventInfo) save;
+  final void Function(EventInfo oldEvent, EventInfo newEvent) save;
 
   @override
   Widget build(BuildContext context) {
@@ -30,18 +30,26 @@ class AppCardOne extends StatelessWidget {
       ),
       child: Container(
         padding: const EdgeInsets.fromLTRB(4, 20, 4, 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              event.title,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  event.title,
+                ),
+                Text(
+                  LunSolConverter.solTolun(event.dateTime).toString(),
+                  style: const TextStyle(
+                    fontSize: 17,
+                    letterSpacing: 0.9,
+                  ),
+                ),
+              ],
             ),
             Text(
-              LunSolConverter.solTolun(event.dateTime).toString(),
-              style: const TextStyle(
-                fontSize: 17,
-                letterSpacing: 0.9,
-              ),
+              'x${event.repeatFor}',
             ),
           ],
         ),
@@ -59,8 +67,11 @@ class AppCardOne extends StatelessWidget {
     switch (result) {
       case null:
         break;
-      case SaveAction(:final event):
-        save(event);
+      case SaveAction(event: final newEvent):
+        save(
+          event,
+          newEvent,
+        );
       case DeleteAction():
         delete();
     }

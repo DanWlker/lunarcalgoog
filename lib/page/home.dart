@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lunarcalgoog/entity/actions.dart';
-import 'package:lunarcalgoog/entity/event_info.dart';
 import 'package:lunarcalgoog/page/date_set_screen.dart';
 import 'package:lunarcalgoog/provider/event_list_provider.dart';
 import 'package:lunarcalgoog/provider/google_sign_in_provider.dart';
@@ -45,50 +44,37 @@ class _HomeState extends ConsumerState<Home> {
           },
           itemBuilder: (context, index) {
             final event = events[index];
-            return Row(
-              children: [
-                Expanded(
-                  child: AppCardOne(
-                    event: event,
-                    delete: () {
-                      SaveToGoogleV2.deleteEvent(event);
-                      events.remove(event);
-                      SaveAndRead.writeData(
-                        identifier:
-                            ref.read(googleSignInProviderSilent).value?.email ??
-                                'unknown',
-                        data: jsonEncode(events),
-                      );
-                    },
-                    save: (EventInfo eventFromChild) {
-                      for (var i = 0; i < events.length; ++i) {
-                        if (events[i].eventID == eventFromChild.eventID) {
-                          SaveToGoogleV2.editEvent(
-                            events[i],
-                            eventFromChild,
-                          );
-                          events[i] = eventFromChild;
-                          break;
-                        }
-                      }
-                      SaveAndRead.writeData(
-                        identifier:
-                            ref.read(googleSignInProviderSilent).value?.email ??
-                                'unknown',
-                        data: jsonEncode(events),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(width: 8),
-                TextButton(
-                  onPressed: () {
-                    SaveToGoogleV2.insertEvent(event);
-                  },
-                  style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                  child: const Icon(Icons.sync),
-                ),
-              ],
+            return AppCardOne(
+              event: event,
+              delete: () {
+                setState(() {
+                  SaveToGoogleV2.deleteEvent(event);
+                  events.remove(event);
+                  SaveAndRead.writeData(
+                    identifier:
+                        ref.read(googleSignInProviderSilent).value?.email ??
+                            'unknown',
+                    data: jsonEncode(events),
+                  );
+                });
+              },
+              save: (oldEvent, newEvent) {
+                setState(() {
+                  events
+                    ..remove(oldEvent)
+                    ..add(newEvent);
+                  SaveToGoogleV2.editEvent(
+                    oldEvent,
+                    newEvent,
+                  );
+                  SaveAndRead.writeData(
+                    identifier:
+                        ref.read(googleSignInProviderSilent).value?.email ??
+                            'unknown',
+                    data: jsonEncode(events),
+                  );
+                });
+              },
             );
           },
         ),
@@ -120,6 +106,7 @@ class _HomeState extends ConsumerState<Home> {
       setState(() {
         events.add(event);
       });
+      await SaveToGoogleV2.insertEvent(event);
       await SaveAndRead.writeData(
         identifier:
             ref.read(googleSignInProviderSilent).value?.email ?? 'unknown',

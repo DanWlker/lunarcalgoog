@@ -33,7 +33,7 @@ class _DateSetScreenState extends State<DateSetScreen> {
     if (widget.event?.dateTime case final DateTime eventDate) {
       selectedDate = eventDate;
     }
-    repeatController.text = widget.event?.repeatFor.toString() ?? '0';
+    repeatController.text = widget.event?.repeatFor.toString() ?? '1';
     super.initState();
   }
 
@@ -265,7 +265,7 @@ class _DateSetScreenState extends State<DateSetScreen> {
             context,
             SaveAction(
               EventInfo(
-                eventID: widget.event?.eventID ?? uuid.v4().replaceAll('-', ''),
+                eventID: uuid.v4().replaceAll('-', ''),
                 title: titleController.text,
                 dateTime: selectedDate,
                 repeatFor: int.parse(repeatController.text),

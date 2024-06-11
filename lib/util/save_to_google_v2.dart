@@ -1,4 +1,5 @@
 import 'package:extension_google_sign_in_as_googleapis_auth/extension_google_sign_in_as_googleapis_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:googleapis/calendar/v3.dart';
 import 'package:lunar/calendar/Lunar.dart';
 import 'package:lunarcalgoog/entity/event_info.dart';
@@ -11,12 +12,33 @@ class SaveToGoogleV2 {
 
   static final instance = SaveToGoogleV2._();
 
-  static void deleteEvent(EventInfo event) {}
+  static Future<void> deleteEvent(EventInfo event) async {
+    await Fluttertoast.showToast(msg: 'Deleting... Do not close app');
+    final client = await googleSignIn.authenticatedClient();
 
-  static void editEvent(EventInfo event, EventInfo eventFromChild) {}
+    if (client == null) {
+      await Fluttertoast.showToast(msg: 'Client is null, have you logged in?');
+      return;
+    }
+
+    final calendarApi = CalendarApi(client);
+    for (var i = 0; i < event.repeatFor; ++i) {
+      await retry(
+        () => calendarApi.events.delete('primary', '${event.eventID}$i'),
+      );
+    }
+    await Fluttertoast.showToast(msg: 'Delete successful');
+  }
+
+  static Future<void> editEvent(EventInfo oldEvent, EventInfo newEvent) async {
+    try {
+      await deleteEvent(oldEvent);
+    } catch (_) {}
+    await insertEvent(newEvent);
+  }
 
   static Future<void> insertEvent(EventInfo eventInfo) async {
-    print(eventInfo.repeatFor);
+    await Fluttertoast.showToast(msg: 'Inserting event... Do not close app');
     final eventsToSend = <Event>[];
 
     for (var i = 0; i < eventInfo.repeatFor; ++i) {
@@ -51,7 +73,7 @@ class SaveToGoogleV2 {
     final client = await googleSignIn.authenticatedClient();
 
     if (client == null) {
-      print('Client is null, have you logged in?');
+      await Fluttertoast.showToast(msg: 'Client is null, have you logged in?');
       return;
     }
 
@@ -65,6 +87,6 @@ class SaveToGoogleV2 {
         ),
       );
     }
-    print('Insert successful');
+    await Fluttertoast.showToast(msg: 'Insert successful');
   }
 }
